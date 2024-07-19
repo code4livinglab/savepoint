@@ -1,0 +1,74 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "fullTextSearch"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector", schema: "public")]
+}
+
+model User {
+  id          String        @id
+  name        String
+  email       String        @unique
+  password    String
+  teams       TeamUser[]
+  projects    ProjectUser[]
+  created     DateTime      @default(now())
+  updated     DateTime      @default(now()) @updatedAt
+}
+
+model Team {
+  id          String        @id
+  name        String
+  users       TeamUser[]
+  projects    Project[]
+  created     DateTime      @default(now())
+  updated     DateTime      @default(now()) @updatedAt
+
+}
+
+model Project {
+  id          String        @id
+  name        String
+  description String
+  embedding   Unsupported("vector")?
+  team        Team @relation(fields: [teamId], references: [id])
+  teamId      String
+  users       ProjectUser[]
+  created     DateTime      @default(now())
+  updated     DateTime      @default(now()) @updatedAt
+}
+
+model TeamUser {
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  team      Team @relation(fields: [teamId], references: [id])
+  teamId    String
+  role      TeamRole
+
+  @@id([userId, teamId])
+}
+
+model ProjectUser {
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+  role      ProjectRole
+
+  @@id([userId, projectId])
+}
+
+enum TeamRole {
+  OWNER
+  MEMBER
+}
+
+enum ProjectRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
