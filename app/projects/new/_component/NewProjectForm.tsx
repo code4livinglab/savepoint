@@ -1,17 +1,48 @@
 'use client'
 
+import { useFormState } from 'react-dom'
 import { useRouter } from 'next/navigation'
-import NewProjectFormButton from './NewProjectFormButton'
-import { action } from '../action'
+import ConfirmButton from './ConfirmButton'
+import SaveButton from './SaveButton'
+import { confirmAction, saveAction } from '../action'
+
+const initialConfirmState = {
+  status: false,
+  data: { description: '' },
+}
+
+const initialSaveState = {
+  status: false,
+  data: {},
+}
 
 const NewProjectForm = () => {
+  const [confirm, confirmFormAction] = useFormState(confirmAction, initialConfirmState)
+  const [save, saveFormAction] = useFormState(saveAction, initialSaveState)
   const router = useRouter()
+
+  // 確認するときとセーブするときでアクションを分ける
+  const newAction = (formData: FormData) => {
+    // 確認するとき
+    if (formData.get('status') === 'confirm') {
+      confirmFormAction(formData)
+    }
+    
+    // セーブするとき
+    if (formData.get('status') === 'save') {
+      saveFormAction(formData)
+    }
+
+    if (confirm.status && save.status) {
+      router.push('/projects')
+    }
+  }
 
   return (
     <form
-      action={action}
       className="flex flex-col absolute z-10 top-0 right-0 bg-gray-800 bg-opacity-80 max-h-[85%] max-w-[40%] overflow-auto text-white rounded-xl border-2 border-gray-400 m-5 mt-20 p-5"
       encType="multipart/form-data"
+      action={newAction}
     >
       <button onClick={router.back} className="flex justify-end">
         <svg
@@ -31,17 +62,26 @@ const NewProjectForm = () => {
       </button>
       <div className="my-5">
         <p className="text-xl">プロジェクト名*</p>
+        {!save.status && typeof save.message !== 'undefined' && (
+          <p>{ save.message }</p>
+        )}
         <input
-          id="name"
+          name="name"
           type="text"
           className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
         />
       </div>
+      {confirm.status && (
+        <div className="my-5">
+          <p className="text-xl">プロジェクト概要</p>
+          <p>{ confirm.data.description }</p>
+        </div>
+      )}
       <input type="file" name="files" multiple className="my-3" />
       <p className="text-sm my-3">
         ※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。
       </p>
-      <NewProjectFormButton />
+      {confirm.status ? <SaveButton /> : <ConfirmButton />}
     </form>
   )
 }
