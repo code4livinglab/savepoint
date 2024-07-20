@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import NewProjectFormButton from './NewProjectFormButton'
-import TextInput from './TextInput'
 import { action } from '../action'
 
 const NewProjectForm = () => {
@@ -30,7 +29,14 @@ const NewProjectForm = () => {
           />
         </svg>
       </button>
-      <TextInput id="name">プロジェクト名*</TextInput>
+      <div className="my-5">
+        <p className="text-xl">プロジェクト名*</p>
+        <input
+          id="name"
+          type="text"
+          className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
+        />
+      </div>
       <input type="file" name="files" multiple className="my-3" />
       <p className="text-sm my-3">
         ※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。
