@@ -74,7 +74,11 @@ const NewProjectForm = () => {
       {confirm.status && (
         <div className="my-5">
           <p className="text-xl">プロジェクト概要</p>
-          <p>{ confirm.data.description }</p>
+          <textarea
+            name="description"
+            rows={8}
+            className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
+          >{ confirm.data.description }</textarea>
         </div>
       )}
       <input type="file" name="files" multiple className="my-3" />
