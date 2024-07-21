@@ -41,7 +41,6 @@ const NewProjectForm = () => {
   return (
     <form
       className="flex flex-col absolute z-10 top-0 right-0 bg-gray-800 bg-opacity-80 max-h-[85%] max-w-[40%] overflow-auto text-white rounded-xl border-2 border-gray-400 m-5 mt-20 p-5"
-      encType="multipart/form-data"
       action={newAction}
     >
       <button onClick={router.back} className="flex justify-end">
