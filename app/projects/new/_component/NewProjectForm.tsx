@@ -1,22 +1,43 @@
 'use client'
 
+import { useFormState } from 'react-dom'
 import { useRouter } from 'next/navigation'
-import TextArea from './TextArea'
-import TextInput from './TextInput'
+import ConfirmButton from './ConfirmButton'
+import SaveButton from './SaveButton'
+import { confirmAction, saveAction } from '../action'
 
-const NewProjectForm = ({
-  action,
-}: {
-  action:(formData: FormData) => Promise<void>,
-}) => {
+const initialConfirmState = {
+  status: false,
+  data: { description: '' },
+}
+
+const initialSaveState = {
+  status: false,
+  data: {},
+}
+
+const NewProjectForm = () => {
+  const [confirm, confirmFormAction] = useFormState(confirmAction, initialConfirmState)
+  const [save, saveFormAction] = useFormState(saveAction, initialSaveState)
   const router = useRouter()
+
+  // 確認するときとセーブするときでアクションを分ける
+  const newAction = (formData: FormData) => {
+    // 確認するとき
+    if (formData.get('status') === 'confirm') {
+      confirmFormAction(formData)
+    }
+    
+    // セーブするとき
+    if (formData.get('status') === 'save') {
+      saveFormAction(formData)
+    }
+  }
+
   return (
     <form
-      action={(formData: FormData) => {
-        action(formData)
-        router.push('/projects')
-      }}
       className="flex flex-col absolute z-10 top-0 right-0 bg-gray-800 bg-opacity-80 max-h-[85%] max-w-[40%] overflow-auto text-white rounded-xl border-2 border-gray-400 m-5 mt-20 p-5"
+      action={newAction}
     >
       <button onClick={router.back} className="flex justify-end">
         <svg
@@ -34,31 +55,32 @@ const NewProjectForm = ({
           />
         </svg>
       </button>
-      <h2 className="text-xl mb-5">
-        ご自身の業務や参加コミュニティでプロジェクトを遂行している際、壁にぶつかったと感じた体験談を教えてください。
-      </h2>
-      <TextInput id="name">プロジェクト名*</TextInput>
-      <TextArea id="question1">
-        それはどんなプロジェクトでしたか？<br />お答えいただける範囲でお答えください。
-      </TextArea>
-      <TextArea id="question2">
-        「壁にぶつかった」と感じたのはどんな状況でしたか？
-      </TextArea>
-      <TextArea id="question3">
-        あなたはそのプロジェクトで壁にぶつかった時、<br />どのような行動をとりましたか？
-      </TextArea>
-      <TextArea id="question4">
-        そのプロジェクトはその後どうなりましたか？
-      </TextArea>
+      <div className="my-5">
+        <p className="text-xl">プロジェクト名*</p>
+        {!save.status && typeof save.message !== 'undefined' && (
+          <p>{ save.message }</p>
+        )}
+        <input
+          name="name"
+          type="text"
+          className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
+        />
+      </div>
+      {confirm.status && (
+        <div className="my-5">
+          <p className="text-xl">プロジェクト概要</p>
+          <textarea
+            name="description"
+            rows={8}
+            className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
+          >{ confirm.data.description }</textarea>
+        </div>
+      )}
+      <input type="file" name="files" multiple className="my-3" />
       <p className="text-sm my-3">
         ※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。
       </p>
-
-      <button
-        className="w-full text-gray-800 bg-white border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-200 focus:outline-none focus:border-gray-600"
-      >
-        セーブする
-      </button>
+      {confirm.status ? <SaveButton /> : <ConfirmButton />}
     </form>
   )
 }
