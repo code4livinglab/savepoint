@@ -32,10 +32,6 @@ const NewProjectForm = () => {
     if (formData.get('status') === 'save') {
       saveFormAction(formData)
     }
-
-    if (confirm.status && save.status) {
-      router.push('/projects')
-    }
   }
 
   return (

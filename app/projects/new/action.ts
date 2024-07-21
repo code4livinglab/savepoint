@@ -4,6 +4,7 @@ import path from 'path'
 import OpenAI from 'openai'
 import pgvector from 'pgvector'
 import { v4 as uuidv4 } from 'uuid'
+import { redirect } from 'next/navigation'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
@@ -91,6 +92,16 @@ export const confirmAction = async (prevState: any, formData: FormData) => {
     description += delta  // Streamからstringを作成
     process.stdout.write(delta)  // ログ出力
   }
+
+  // アップロードしたファイルの削除
+  await Promise.all([
+    ...imageContents.map(async (content) => {
+      await openai.files.del(content.image_file.file_id)
+    }),
+    ...attachments.map(async (attachment) => {
+      await openai.files.del(attachment.file_id)
+    })
+  ])
   
   return {
     status: true,
@@ -158,11 +169,6 @@ INSERT INTO
         Body: Buffer.from(fileBuffer),
       }))
     }
-
-    return {
-      status: true,
-      data: {},
-    }
   } catch (error) {
     console.log({error})
     return {
@@ -171,5 +177,11 @@ INSERT INTO
     }
   } finally {
     await prisma.$disconnect()
+  }
+
+  redirect('/projects')
+  return {
+    status: true,
+    data: {},
   }
 }
