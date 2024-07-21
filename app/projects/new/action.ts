@@ -13,6 +13,8 @@ import { PROMPT } from '@/app/_types/prompt'
 const prisma = new PrismaClient()
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+  organization: process.env.OPENAI_ORGANIZATION,
+  project: process.env.OPENAI_PROJECT,
 })
 
 const s3Client = new S3Client({
@@ -64,14 +66,6 @@ export const confirmAction = async (prevState: any, formData: FormData) => {
     })
   )
 
-  // アシスタントの作成
-  const assistant = await openai.beta.assistants.create({
-    name: 'SAVE ASSISTANT',
-    description: '',
-    model: 'gpt-4o-mini',
-    tools: [{ type: 'file_search' }],
-  })
-  
   // スレッドの作成
   const thread = await openai.beta.threads.create({
     // @ts-ignore
@@ -86,7 +80,7 @@ export const confirmAction = async (prevState: any, formData: FormData) => {
   
   // ランの作成
   const stream = openai.beta.threads.runs.stream(thread.id, {
-    assistant_id: assistant.id,
+    assistant_id: process.env.OPENAI_ASSISTANT_ID ?? '',
   })
   
   // 出力の取得
