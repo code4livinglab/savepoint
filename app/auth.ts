@@ -1,4 +1,5 @@
-import NextAuth from "next-auth"
+import NextAuth, { type DefaultSession } from "next-auth"
+import { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
 import { compare } from 'bcryptjs'
 import { object, string, ZodError } from "zod"
@@ -14,6 +15,20 @@ export const signInSchema = object({
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
 })
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id?: string
+    } & DefaultSession["user"]
+  }
+}
+ 
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string
+  }
+}
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -58,4 +73,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
+    session({ session, token }) {
+      if (token.id) {
+        session.user.id = token.id
+      }
+      return session
+    },
+  },
 })
