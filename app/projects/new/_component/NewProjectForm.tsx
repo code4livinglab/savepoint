@@ -1,15 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { useFormState } from 'react-dom'
 import { useRouter } from 'next/navigation'
+import { readStreamableValue } from 'ai/rsc'
 import ConfirmButton from './ConfirmButton'
 import SaveButton from './SaveButton'
 import { confirmAction, saveAction } from '../action'
-
-const initialConfirmState = {
-  status: false,
-  data: { description: '' },
-}
 
 const initialSaveState = {
   status: false,
@@ -17,15 +14,22 @@ const initialSaveState = {
 }
 
 const NewProjectForm = () => {
-  const [confirm, confirmFormAction] = useFormState(confirmAction, initialConfirmState)
+  const [description, setDescription] = useState('')  // プロジェクト概要
   const [save, saveFormAction] = useFormState(saveAction, initialSaveState)
   const router = useRouter()
 
   // 確認するときとセーブするときでアクションを分ける
-  const newAction = (formData: FormData) => {
+  const newAction = async (formData: FormData) => {
     // 確認するとき
     if (formData.get('status') === 'confirm') {
-      confirmFormAction(formData)
+      const response = await confirmAction(formData)
+      for await (const value of readStreamableValue(response)) {
+        const buffer = new Uint8Array(value).buffer
+        const text = new TextDecoder().decode(buffer)
+        const json = JSON.parse(text)
+        const delta = json.data?.delta?.content?.[0]?.text?.value ?? ''
+        setDescription((description) => description + delta)
+      }
     }
     
     // セーブするとき
@@ -66,21 +70,23 @@ const NewProjectForm = () => {
           className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
         />
       </div>
-      {confirm.status && (
+      {description.length > 0 && (
         <div className="my-5">
           <p className="text-xl">プロジェクト概要</p>
           <textarea
+            key={description}  // textareaの再レンダリングを走らせ、defalutValueを更新する。
             name="description"
             rows={8}
             className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
-          >{ confirm.data.description }</textarea>
+            defaultValue={description}
+          />
         </div>
       )}
       <input type="file" name="files" multiple className="my-3" />
       <p className="text-sm my-3">
         ※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。
       </p>
-      {confirm.status ? <SaveButton /> : <ConfirmButton />}
+      {description.length > 0 ? <SaveButton /> : <ConfirmButton />}
     </form>
   )
 }

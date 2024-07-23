@@ -5,6 +5,7 @@ import OpenAI from 'openai'
 import pgvector from 'pgvector'
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from 'next/navigation'
+import { createStreamableValue } from 'ai/rsc'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
@@ -27,7 +28,7 @@ const s3Client = new S3Client({
 })
 
 // ファイルからdescriptionの生成
-export const confirmAction = async (prevState: any, formData: FormData) => {
+export const confirmAction = async (formData: FormData) => {
   // フォームの取得
   const files = formData.getAll('files') as File[]
   
@@ -83,15 +84,6 @@ export const confirmAction = async (prevState: any, formData: FormData) => {
   const stream = openai.beta.threads.runs.stream(thread.id, {
     assistant_id: process.env.OPENAI_ASSISTANT_ID ?? '',
   })
-  
-  // 出力の取得
-  let description = ''
-  for await (const event of stream) {
-    // @ts-ignore
-    const delta = event.data?.delta?.content?.[0]?.text?.value ?? ''
-    description += delta  // Streamからstringを作成
-    process.stdout.write(delta)  // ログ出力
-  }
 
   // アップロードしたファイルの削除
   await Promise.all([
@@ -102,11 +94,9 @@ export const confirmAction = async (prevState: any, formData: FormData) => {
       await openai.files.del(attachment.file_id)
     })
   ])
-  
-  return {
-    status: true,
-    data: { description }
-  }
+
+  const newStream = createStreamableValue(stream.toReadableStream())
+  return newStream.value
 }
 
 // ProjectのDBへの保存・ファイルのS3へのアップロード
