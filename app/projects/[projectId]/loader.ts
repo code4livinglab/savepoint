@@ -22,16 +22,21 @@ export const getRole = async (projectId: string) => {
   }
 
   // ユーザーがAdminの場合にアクセス権限を付与
-  const userId = session.user.id ?? ''
+  const userId = session.user.id ?? null
   if (userId === 'admin') {
-    return userId
+    return 'OWNER'
+  }
+
+  if (!userId) {
+    console.error('No user id')
+    return null
   }
 
   try {
     const user = await prisma.projectUser.findUnique({
       where: { userId_projectId: { userId, projectId } },
     })
-    return user?.userId
+    return user?.role
   } catch (error) {
     console.error('Error retrieving user role:', error)
     return null
