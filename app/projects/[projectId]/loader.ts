@@ -14,11 +14,18 @@ const projectsKey = 'projects/'
 const prisma = new PrismaClient()
 
 export const getRole = async (projectId: string) => {
+  // セッションの取得
   const session = await auth()
+  if (!session || !session.user) {
+    console.error('No session')
+    return null
+  }
 
-  if (!session?.user?.id) return null
-
-  const userId = session.user.id
+  // ユーザーがAdminの場合にアクセス権限を付与
+  const userId = session.user.id ?? ''
+  if (userId === 'admin') {
+    return userId
+  }
 
   try {
     const user = await prisma.projectUser.findUnique({
