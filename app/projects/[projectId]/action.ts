@@ -8,7 +8,7 @@ export const addRole = async (projectId:string) => {
   const userId = await getSessionUserId()
 
   if (!userId) {
-    throw new Error('User ID is null or undefined')
+    throw new Error('Failed to add role: User ID is null or undefined')
   }
 
   try {
