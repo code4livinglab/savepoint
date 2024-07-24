@@ -46,34 +46,10 @@ const client = new S3Client({
     identityPoolId: identityPoolId as string,
   }),
 })
-const prisma = new PrismaClient()
 
 export const loader = async (id: string) => {
   try {
     const projects: any = await prisma.$queryRaw`
-    SELECT
-      id,
-      name,
-      description,
-      embedding::text,
-      "teamId",
-      created,
-      updated
-    FROM
-      public."Project"
-    WHERE
-      id = ${id}
-    `
-    return projects[0] ?? []
-  } catch (error) {
-    console.error('Error loading project:', error)
-    return []
-  }
-}
-
-export const loader = async (id: string) => {
-  const prisma = new PrismaClient()
-  const projects: any = await prisma.$queryRaw`
 SELECT
   id,
   name,
@@ -87,8 +63,11 @@ FROM
 WHERE
   id = ${id}
 `
-
-  return projects[0] ?? []
+    return projects[0] ?? []
+  } catch (error) {
+    console.error('Error loading project:', error)
+    return []
+  }
 }
 
 const  getFile = async (projectId: string, fileName: string) => {
