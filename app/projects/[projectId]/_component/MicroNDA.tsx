@@ -3,6 +3,8 @@ import { Box } from '@mui/material'
 import { addRole } from '../action' 
 import { useRouter } from 'next/navigation'
 import { Project } from '@/app/_types/project'
+import Markdown from 'react-markdown'
+
 
 
 const MicroNDA = ({
@@ -30,11 +32,13 @@ const MicroNDA = ({
           />
         </svg>
       </button>
+      <Markdown className="prose prose-sm prose-invert">
+          {project.description}
+      </Markdown>
      
-      <div >
-        <h1>{ project.name }</h1>
-        <h2 className="text-gray-300">マイクロNDA</h2>
-        <p className="text-gray-300">ここに利用規約のテキストが入ります..</p>
+      <div className="mt-10" >
+        <h2 className="text-xl text-white">マイクロNDA</h2>
+        <p className="mt-1 text-gray-300">ここにmicroNDAのテキストが入ります..</p>
 
         <button
         className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
