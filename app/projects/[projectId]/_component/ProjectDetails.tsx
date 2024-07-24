@@ -7,54 +7,59 @@ import { File } from '@/app/_types/file'
 import { Project } from '@/app/_types/project'
 import { downloadLoader } from '../loader'
 
+
 const ProjectDetails = ({
   project,
 }: {
   project: Project,
 }) => {
   const router = useRouter()
-  return (
-    <Box sx={{mt: 2}} className="absolute top-20 m-5 flex flex-col max-h-[85%] text-white bg-gray-800 bg-opacity-80 overflow-auto rounded-xl border-2 border-gray-400 p-5">
-      <button onClick={router.back} className="flex justify-end">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
+
+    return (
+      <Box sx={{mt: 2}} className="absolute top-20 m-5 flex flex-col max-h-[85%] text-white bg-gray-800 bg-opacity-80 overflow-auto rounded-xl border-2 border-gray-400 p-5">
+        <button onClick={router.back} className="flex justify-end">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 18 18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <Markdown className="prose prose-sm prose-invert">
+          {project.description}
+        </Markdown>
+  
+        {/* {project.file_names && project.file_names?.length > 0 && (
+          <>
+            <h2 className="text-xl text-gray-200 font-semibold my-3">Data</h2>
+            {project.file_names.map((filename, i) => (
+              <button key={i}
+                className="text-left text-gray-300 my-1 hover:text-blue-300 hover:underline"
+                onClick={()=> viewProjectFile(project.id, filename)}
+              >
+                ・{filename}
+              </button>
+            ))}
+          </>
+        )} */}
+        <button
+          className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
+          onClick={()=> downloadProjectFiles(project.id)}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-      <Markdown className="prose prose-sm prose-invert">
-        {project.description}
-      </Markdown>
-      {/* {project.file_names && project.file_names?.length > 0 && (
-        <>
-          <h2 className="text-xl text-gray-200 font-semibold my-3">Data</h2>
-          {project.file_names.map((filename, i) => (
-            <button key={i}
-              className="text-left text-gray-300 my-1 hover:text-blue-300 hover:underline"
-              onClick={()=> viewProjectFile(project.id, filename)}
-            >
-              ・{filename}
-            </button>
-          ))}
-        </>
-      )} */}
-      <button
-        className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
-        onClick={()=> downloadProjectFiles(project.id)}
-      >
-      ロードする
-      </button>
-    </Box>
-  )
+        ロードする
+        </button>
+      </Box>
+    )
+  
+
 }
 
 // projectfileのダウンロード

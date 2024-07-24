@@ -1,12 +1,38 @@
 import { S3Client, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
+import { auth } from "../../auth"
+
 
 const bucketName = process.env.AWS_BUCKET_NAME_RAW
 const bucketRegion = process.env.AWS_BUCKET_REGION
 const identityPoolId = process.env.AWS_IDENTITY_POOL_ID
 const transbucket = process.env.AWS_BUCKET_NAME_TRANSFORMED
 const projectsKey = 'projects/'
+
+
+export const getRole = async (projectId: string) => {
+  const prisma = new PrismaClient()
+  const session = await auth()
+
+  if (!session?.user?.id) return null
+
+  const userId = session.user.id
+
+  const user = await prisma.projectUser.findUnique({
+    where: { userId_projectId: { userId, projectId } },
+  })
+
+  return user?.userId
+}
+
+export const getSessionUserId = async () => {
+  const session = await auth()
+
+  if (!session?.user?.id) return null
+
+  return session.user.id
+}
 
 const client = new S3Client({
   region: bucketRegion,
@@ -15,6 +41,7 @@ const client = new S3Client({
     identityPoolId: identityPoolId as string,
   }),
 })
+ 
 
 export const loader = async (id: string) => {
   const prisma = new PrismaClient()
