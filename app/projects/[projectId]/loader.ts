@@ -11,19 +11,24 @@ const transbucket = process.env.AWS_BUCKET_NAME_TRANSFORMED
 const projectsKey = 'projects/'
 
 
+const prisma = new PrismaClient()
+
 export const getRole = async (projectId: string) => {
-  const prisma = new PrismaClient()
   const session = await auth()
 
   if (!session?.user?.id) return null
 
   const userId = session.user.id
 
-  const user = await prisma.projectUser.findUnique({
-    where: { userId_projectId: { userId, projectId } },
-  })
-
-  return user?.userId
+  try {
+    const user = await prisma.projectUser.findUnique({
+      where: { userId_projectId: { userId, projectId } },
+    })
+    return user?.userId
+  } catch (error) {
+    console.error('Error retrieving user role:', error)
+    return null
+  }
 }
 
 export const getSessionUserId = async () => {
