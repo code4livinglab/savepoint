@@ -14,20 +14,9 @@ model User {
   name        String
   email       String        @unique
   password    String
-  teams       TeamUser[]
   projects    ProjectUser[]
   created     DateTime      @default(now())
   updated     DateTime      @default(now()) @updatedAt
-}
-
-model Team {
-  id          String        @id
-  name        String
-  users       TeamUser[]
-  projects    Project[]
-  created     DateTime      @default(now())
-  updated     DateTime      @default(now()) @updatedAt
-
 }
 
 model Project {
@@ -35,21 +24,10 @@ model Project {
   name        String
   description String
   embedding   Unsupported("vector")?
-  team        Team @relation(fields: [teamId], references: [id])
   teamId      String
   users       ProjectUser[]
   created     DateTime      @default(now())
   updated     DateTime      @default(now()) @updatedAt
-}
-
-model TeamUser {
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  team      Team @relation(fields: [teamId], references: [id])
-  teamId    String
-  role      TeamRole
-
-  @@id([userId, teamId])
 }
 
 model ProjectUser {
@@ -60,11 +38,6 @@ model ProjectUser {
   role      ProjectRole
 
   @@id([userId, projectId])
-}
-
-enum TeamRole {
-  OWNER
-  MEMBER
 }
 
 enum ProjectRole {
