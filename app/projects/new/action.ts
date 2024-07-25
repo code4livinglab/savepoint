@@ -11,6 +11,7 @@ import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
 import { textMimeTypeList } from '@/app/_types/file'
 import { PROMPT } from '@/app/_types/prompt'
+import { auth } from "../../auth"
 
 const prisma = new PrismaClient()
 const openai = new OpenAI({
@@ -128,7 +129,7 @@ ${message}
       model: 'text-embedding-ada-002',
     })
 
-    // インサート
+    // Projectのインサート
     const embedding = pgvector.toSql(response.data[0].embedding)
     const result: number = await prisma.$executeRaw`
 INSERT INTO
@@ -144,6 +145,21 @@ INSERT INTO
     ${embedding}::vector
   )
 `
+
+    // projectUserのインサート
+    const session = await auth()
+    const userId = session?.user?.id
+    if (!userId) {
+      throw new Error('Failed to add role: User ID is null or undefined')
+    }
+
+    await prisma.projectUser.create({
+      data: {
+        userId: userId,
+        projectId: id,
+        role: 'OWNER',
+      },
+    }) 
 
     // ファイルのアップロード
     const dirKey = `projects/${id}/`
