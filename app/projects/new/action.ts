@@ -12,6 +12,7 @@ import { PrismaClient } from '@prisma/client'
 import { textMimeTypeList } from '@/app/_types/file'
 import { PROMPT } from '@/app/_types/prompt'
 import { auth } from "../../auth"
+import { revalidatePath } from 'next/cache'
 
 const prisma = new PrismaClient()
 const openai = new OpenAI({
@@ -36,21 +37,21 @@ export const confirmAction = async (formData: FormData) => {
   // TODO: バリデーション
 
   // Visionから入力するファイルのリストを作成
-  const imageContents = await Promise.all(
-    files
-    .filter((file) => file.type.startsWith('image/'))
-    .map(async (formFile) => {
-      const file = await openai.files.create({
-        file: formFile,
-        purpose: 'assistants',
-      });
+  // const imageContents = await Promise.all(
+  //   files
+  //   .filter((file) => file.type.startsWith('image/'))
+  //   .map(async (formFile) => {
+  //     const file = await openai.files.create({
+  //       file: formFile,
+  //       purpose: 'assistants',
+  //     });
       
-      return {
-        type: 'image_file',
-        image_file: { file_id: file.id },
-      };
-    })
-  )
+  //     return {
+  //       type: 'image_file',
+  //       image_file: { file_id: file.id },
+  //     };
+  //   })
+  // )
   
   // File Searchから入力するファイルのリストを作成
   const attachments = await Promise.all(
@@ -70,12 +71,13 @@ export const confirmAction = async (formData: FormData) => {
   )
 
   // スレッドの作成
+  // @ts-ignore
   const thread = await openai.beta.threads.create({
     // @ts-ignore
     messages: [
       {
         role: 'user',
-        content: [{ type: 'text', text: PROMPT }, ...imageContents],
+        content: PROMPT,  // [{ type: 'text', text: PROMPT }, ...imageContents],
         attachments: attachments,
       }
     ]
@@ -88,9 +90,9 @@ export const confirmAction = async (formData: FormData) => {
 
   // アップロードしたファイルの削除
   await Promise.all([
-    ...imageContents.map(async (content) => {
-      await openai.files.del(content.image_file.file_id)
-    }),
+    // ...imageContents.map(async (content) => {
+    //   await openai.files.del(content.image_file.file_id)
+    // }),
     ...attachments.map(async (attachment) => {
       await openai.files.del(attachment.file_id)
     })
@@ -182,6 +184,7 @@ INSERT INTO
     await prisma.$disconnect()
   }
 
+  revalidatePath('/projects')
   redirect('/projects')
   return {
     status: true,

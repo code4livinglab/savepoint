@@ -1,13 +1,10 @@
-'use client'
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Markdown from 'react-markdown'
 import { Box } from '@mui/material'
 // import { File } from '@/app/_types/file'
 import { Project } from '@/app/_types/project'
 import MicroNDA from './MicroNDA'
 import Download from './Download'
+import { BackButton } from './BackButton'
+import { MarkdownViewer } from './MarkdownViewer'
 
 const ProjectDetails = ({
   project,
@@ -16,29 +13,10 @@ const ProjectDetails = ({
   project: Project,
   userRole: string | null,
 }) => {
-  const router = useRouter()
-  
   return (
     <Box sx={{mt: 2}} className="absolute top-20 m-5 flex flex-col max-h-[85%] text-white bg-gray-800 bg-opacity-80 overflow-auto rounded-xl border-2 border-gray-400 p-5">
-      <button onClick={router.back} className="flex justify-end">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-      <Markdown className="prose prose-sm prose-invert">
-        {project.description}
-      </Markdown>
+      <BackButton />
+      <MarkdownViewer project={project} />
       {/* {project.file_names && project.file_names?.length > 0 && (
         <>
           <h2 className="text-xl text-gray-200 font-semibold my-3">Data</h2>
