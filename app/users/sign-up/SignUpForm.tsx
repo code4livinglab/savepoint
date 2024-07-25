@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { signUpAction } from "./action";
-import { TextField, Button, Box, Typography, Alert } from "@mui/material";
+import { TextField, Box, Typography, Alert } from "@mui/material";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { SignUpFormButton } from "./SignUpFormButton";
+import { signUpAction } from "./action";
 
 const initialState = {
   error: null,
@@ -72,16 +73,8 @@ const SignUpForm = () => {
             fullWidth
             variant="outlined"
           />
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            fullWidth
-            className="bg-blue-500 hover:bg-blue-700 text-white"
-          >
-            Sign up
-          </Button>
         </Box>
+        <SignUpFormButton />
         <Typography variant="body2" className="text-center mt-4">
           すでにアカウントをお持ちですか？{" "}
           <Link href="/users/sign-in" className="text-blue-500 hover:underline">

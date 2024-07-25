@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { TextField, Button, Box, Typography, Alert } from "@mui/material";
+import { TextField, Box, Typography, Alert } from "@mui/material";
+import { SignInFormButton } from "./SignInFormButton";
 import { signInAction } from "./action";
 
 const initialState = {
@@ -53,15 +54,7 @@ const SignInForm = () => {
             variant="outlined"
             required
           />
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            fullWidth
-            className="bg-blue-500 hover:bg-blue-700 text-white"
-          >
-            Sign in
-          </Button>
+          <SignInFormButton />
         </Box>
         <Typography variant="body2" className="text-center mt-4">
           アカウントをお持ちでないですか？{" "}
