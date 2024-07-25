@@ -24,7 +24,6 @@ model Project {
   name        String
   description String
   embedding   Unsupported("vector")?
-  teamId      String
   users       ProjectUser[]
   created     DateTime      @default(now())
   updated     DateTime      @default(now()) @updatedAt
