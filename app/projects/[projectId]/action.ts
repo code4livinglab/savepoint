@@ -5,7 +5,6 @@ import { S3Client, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/clien
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
 import { getSessionUserId } from './loader'
-import { auth } from "../../auth"
 
 const bucketName = process.env.AWS_BUCKET_NAME_RAW
 const bucketRegion = process.env.AWS_BUCKET_REGION
@@ -13,7 +12,6 @@ const identityPoolId = process.env.AWS_IDENTITY_POOL_ID
 const transbucket = process.env.AWS_BUCKET_NAME_TRANSFORMED
 const projectsKey = 'projects/'
 
-const prisma = new PrismaClient()
 const client = new S3Client({
   region: bucketRegion,
   credentials: fromCognitoIdentityPool({
@@ -78,13 +76,10 @@ const  getFile = async (projectId: string, fileName: string) => {
 // ファイルのダウンロード
 export const downloadAction = async (projectId: string) => {
   const projectUri = projectsKey + projectId;
-  const hoge = new ListObjectsV2Command({
+  const filesData = await client.send(new ListObjectsV2Command({
     Bucket: bucketName,
     Prefix: projectUri,
-  })
-  console.log(hoge)
-  const filesData = await client.send(hoge)
-  console.log(filesData)
+  }))
 
   const filePromises = filesData.Contents?.map(async file => {
     const fileData = await client.send(new GetObjectCommand({
@@ -94,10 +89,10 @@ export const downloadAction = async (projectId: string) => {
 
     if (fileData.Body) {
       const byteArray = await fileData.Body.transformToByteArray()  // Uint8Array
-      const blob = new Blob([byteArray], { type: fileData.ContentType })  // blob
       return {
         key: file.Key,
-        blob: blob,
+        byteArray: byteArray,
+        contentType: fileData.ContentType,
       }
     }
   })

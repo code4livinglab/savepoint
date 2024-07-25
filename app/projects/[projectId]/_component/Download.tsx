@@ -21,11 +21,13 @@ const downloadProjectFiles = async (projectId: string) => {
   const files = await downloadAction(projectId)
   
   files.forEach((file) => {
-    if (!file || !file.key || file.blob) {
+    if (!file || !file.key || !file.byteArray || !file.contentType) {
       return null
     }
 
-    const url = window.URL.createObjectURL(file.blob)
+    const byteArray = new Uint8Array(file.byteArray)
+    const blob = new Blob([byteArray], { type: file.contentType })  // blob
+    const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     
     a.href = url

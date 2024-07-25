@@ -13,9 +13,10 @@ export default function Loading() {
         justifyContent: 'center',
         height: '100vh',
       }}
+      className="bg-black"
     >
-      <Typography variant="h5">Welcome to SAVEPOINT</Typography>
-      <LinearProgress className="w-1/4 m-20"/>
+      <Typography variant="h5" className='text-white'>Welcome to SAVEPOINT</Typography>
+      <LinearProgress className="w-1/3 m-20"/>
     </Box>
   )
 }
