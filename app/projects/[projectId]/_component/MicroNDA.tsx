@@ -1,3 +1,4 @@
+'use client'
 import { addRole } from '../action'
 
 const MicroNDA = ({

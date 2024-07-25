@@ -1,4 +1,6 @@
-import { downloadLoader } from '../loader'
+'use client'
+
+import { downloadAction } from '../action'
 
 const Download = ({
   projectId,
@@ -16,7 +18,7 @@ const Download = ({
 }
 
 const downloadProjectFiles = async (projectId: string) => {
-  const files = await downloadLoader(projectId)
+  const files = await downloadAction(projectId)
   
   files.forEach((file) => {
     if (!file || !file.key || file.blob) {
