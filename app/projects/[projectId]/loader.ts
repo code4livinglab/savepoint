@@ -14,17 +14,29 @@ const projectsKey = 'projects/'
 const prisma = new PrismaClient()
 
 export const getRole = async (projectId: string) => {
+  // セッションの取得
   const session = await auth()
+  if (!session || !session.user) {
+    console.error('No session')
+    return null
+  }
 
-  if (!session?.user?.id) return null
+  // ユーザーがAdminの場合にアクセス権限を付与
+  const userId = session.user.id ?? null
+  if (userId === 'admin') {
+    return 'OWNER'
+  }
 
-  const userId = session.user.id
+  if (!userId) {
+    console.error('No user id')
+    return null
+  }
 
   try {
     const user = await prisma.projectUser.findUnique({
       where: { userId_projectId: { userId, projectId } },
     })
-    return user?.userId
+    return user?.role
   } catch (error) {
     console.error('Error retrieving user role:', error)
     return null

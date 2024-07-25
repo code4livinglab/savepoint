@@ -18,13 +18,14 @@ export const addRole = async (projectId:string) => {
         projectId,
         role: 'VIEWER',
       },
-    }) 
+    })
+    return 'VIEWER'
   } catch (error) {
     console.error('Error accepting NDA:', error)
-    return false
+    return null
   }finally {
     await prisma.$disconnect() 
   }
-  return true
+  return null
 
 }
