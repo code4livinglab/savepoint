@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Markdown from 'react-markdown'
 import { Box } from '@mui/material'
-import { File } from '@/app/_types/file'
+// import { File } from '@/app/_types/file'
 import { Project } from '@/app/_types/project'
-import { addRole } from '../action' 
-import { downloadLoader } from '../loader'
+import MicroNDA from './MicroNDA'
+import Download from './Download'
 
 const ProjectDetails = ({
   project,
@@ -16,7 +16,6 @@ const ProjectDetails = ({
   project: Project,
   userRole: string | null,
 }) => {
-  const [role, setRole] = useState(userRole)
   const router = useRouter()
   
   return (
@@ -40,66 +39,26 @@ const ProjectDetails = ({
       <Markdown className="prose prose-sm prose-invert">
         {project.description}
       </Markdown>
-      {role ? (
+      {/* {project.file_names && project.file_names?.length > 0 && (
         <>
-          {/* {project.file_names && project.file_names?.length > 0 && (
-            <>
-              <h2 className="text-xl text-gray-200 font-semibold my-3">Data</h2>
-              {project.file_names.map((filename, i) => (
-                <button key={i}
-                  className="text-left text-gray-300 my-1 hover:text-blue-300 hover:underline"
-                  onClick={()=> viewProjectFile(project.id, filename)}
-                >
-                  ・{filename}
-                </button>
-              ))}
-            </>
-          )} */}
-          <button
-            className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
-            onClick={()=> downloadProjectFiles(project.id)}
-          >
-            ロードする
-          </button>
+          <h2 className="text-xl text-gray-200 font-semibold my-3">Data</h2>
+          {project.file_names.map((filename, i) => (
+            <button key={i}
+              className="text-left text-gray-300 my-1 hover:text-blue-300 hover:underline"
+              onClick={()=> viewProjectFile(project.id, filename)}
+            >
+              ・{filename}
+            </button>
+          ))}
         </>
+      )} */}
+      {userRole ? (
+        <Download projectId={project.id} />
       ) : (
-        <div className="mt-10" >
-          <h2 className="text-xl text-white">マイクロNDA</h2>
-          <p className="mt-1 text-gray-300">ここにmicroNDAのテキストが入ります..</p>
-          <button
-            className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
-            onClick={async () => {
-              const role = await addRole(project.id)
-              setRole(role)
-            }}
-          >
-            承認する
-          </button>
-        </div>
+        <MicroNDA projectId={project.id} />
       )}
     </Box>
   )
-}
-
-// projectfileのダウンロード
-const downloadProjectFiles = async (projectId: string) => {
-  const files = await downloadLoader(projectId)
-  
-  files.forEach((file) => {
-    if (!file || !file.key || file.blob) {
-      return null
-    }
-
-    const url = window.URL.createObjectURL(file.blob)
-    const a = document.createElement('a')
-    
-    a.href = url
-    a.download = file.key.split('/').pop() ?? ''
-    document.body.appendChild(a)
-    a.click()
-    window.URL.revokeObjectURL(url)
-    a.remove()
-  })
 }
 
 const viewProjectFile = async (projectId: string, fileName: string) => {
