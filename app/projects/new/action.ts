@@ -118,7 +118,6 @@ export const saveAction = async (prevState: any, formData: FormData) => {
   try {
     // ペイロード
     const id = uuidv4()
-    const teamId = 'admin'
     const description = `# ${name}
 
 ${message}
@@ -138,14 +137,12 @@ INSERT INTO
     id,
     name,
     description,
-    embedding,
-    "teamId"
+    embedding
   ) VALUES (
     ${id},
     ${name},
     ${description},
-    ${embedding}::vector,
-    ${teamId}
+    ${embedding}::vector
   )
 `
 

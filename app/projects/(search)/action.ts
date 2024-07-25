@@ -19,7 +19,6 @@ export const action = async (prevState: any, formData: FormData) => {
     name,
     description,
     embedding::text,
-    "teamId",
     created,
     updated
   FROM
