@@ -1,5 +1,6 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { PrismaClient } from '@prisma/client'
 import { getSessionUserId } from './loader'
 
@@ -19,7 +20,8 @@ export const addRole = async (projectId:string) => {
         role: 'VIEWER',
       },
     })
-    return 'VIEWER'
+    
+    revalidatePath(`/projects/${projectId}`)
   } catch (error) {
     console.error('Error accepting NDA:', error)
     return null

@@ -12,10 +12,7 @@ const MicroNDA = ({
       <p className="mt-1 text-gray-300">ここにmicroNDAのテキストが入ります..</p>
       <button
         className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
-        onClick={async () => {
-          const role = await addRole(projectId)
-          revalidatePath(`/projects/${projectId}`)
-        }}
+        onClick={async () => { await addRole(projectId) }}
       >
         承認する
       </button>
