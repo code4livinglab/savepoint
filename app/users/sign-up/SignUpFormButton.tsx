@@ -3,6 +3,7 @@ import { useFormStatus } from 'react-dom'
 
 export const SignUpFormButton = () => {
   const { pending } = useFormStatus()
+  
   return (
     <Button
       variant="contained"

@@ -73,8 +73,8 @@ const SignUpForm = () => {
             fullWidth
             variant="outlined"
           />
+          <SignUpFormButton />
         </Box>
-        <SignUpFormButton />
         <Typography variant="body2" className="text-center mt-4">
           すでにアカウントをお持ちですか？{" "}
           <Link href="/users/sign-in" className="text-blue-500 hover:underline">
