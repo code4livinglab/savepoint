@@ -10,7 +10,6 @@ SELECT
   name,
   description,
   embedding::text,
-  "teamId",
   created,
   updated
 FROM
