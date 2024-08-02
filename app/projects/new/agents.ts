@@ -13,11 +13,11 @@ export const generateFilesObjectAgent = async (filePaths: string[]) => {
     model: modelWithTracing,
     schema: z.object({
       files: z.array(
-        z.string().describe('ファイルの正式なパス'),
+        z.string(),
       ),
     }),
     system: `プロジェクトの概要文を作成するため、与えられた複数のファイルから、\
-プロジェクト全体を最もよく説明するファイルを3つまでピックアップしてください。
+プロジェクト全体を最もよく説明するファイルを5個ピックアップしてください。
 `,
     messages: [{ role: 'user', content: `${filePaths}` }],
   })

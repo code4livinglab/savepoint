@@ -1,26 +1,28 @@
 'use server'
 
-import path from 'path'
-import OpenAI from 'openai'
 import pgvector from 'pgvector'
 import { v4 as uuidv4 } from 'uuid'
 import { redirect } from 'next/navigation'
-import { createStreamableValue } from 'ai/rsc'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
-import { textMimeTypeList } from '@/app/_types/file'
-import { PROMPT } from '@/app/_types/prompt'
 import { auth } from "../../auth"
 import { revalidatePath } from 'next/cache'
 
-const prisma = new PrismaClient()
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  organization: process.env.OPENAI_ORGANIZATION,
-  project: process.env.OPENAI_PROJECT,
-})
+import { openai } from '@ai-sdk/openai'
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'fs'
+import { tmpdir } from 'os'
+import { MultiFileLoader } from 'langchain/document_loaders/fs/multi_file'
+import { dirname, extname, join } from 'path'
+import { CSVLoader } from '@langchain/community/document_loaders/fs/csv'
+import { DocxLoader } from '@langchain/community/document_loaders/fs/docx'
+import { JSONLoader } from 'langchain/document_loaders/fs/json'
+import { PDFLoader } from '@langchain/community/document_loaders/fs/pdf'
+import { PPTXLoader } from '@langchain/community/document_loaders/fs/pptx'
+import { TextLoader } from 'langchain/document_loaders/fs/text'
+import { generateFilesObjectAgent, streamSummaryTextAgent } from './agents'
 
+const prisma = new PrismaClient()
 const s3Client = new S3Client({
   region: process.env.AWS_BUCKET_REGION,
   credentials: fromCognitoIdentityPool({
@@ -30,76 +32,68 @@ const s3Client = new S3Client({
 })
 
 // ファイルからdescriptionの生成
-export const confirmAction = async (formData: FormData) => {
-  // フォームの取得
-  const files = formData.getAll('files') as File[]
-  
-  // TODO: バリデーション
+export const confirmAction = async (
+  formData: FormData,
+  webkitRelativePaths: string[],
+) => {
+  // 重要なファイルをピックアップ
+  const paths = await generateFilesObjectAgent(webkitRelativePaths)
 
-  // Visionから入力するファイルのリストを作成
-  // const imageContents = await Promise.all(
-  //   files
-  //   .filter((file) => file.type.startsWith('image/'))
-  //   .map(async (formFile) => {
-  //     const file = await openai.files.create({
-  //       file: formFile,
-  //       purpose: 'assistants',
-  //     });
-      
-  //     return {
-  //       type: 'image_file',
-  //       image_file: { file_id: file.id },
-  //     };
-  //   })
-  // )
-  
-  // File Searchから入力するファイルのリストを作成
-  const attachments = await Promise.all(
-    files
-    .filter((file) => textMimeTypeList.includes(path.extname(file.name)))
-    .map(async (formFile) => {
-      const file = await openai.files.create({
-        file: formFile,
-        purpose: 'assistants',
-      })
-
-      return {
-        file_id: file.id,
-        tools: [{ type: 'file_search' }],
-      }
+  // フォームデータを取得
+  const formFiles = formData.getAll('files') as File[]
+  const files = formFiles
+    // formFileにwebkitRelativePathが含まれないため手動で追加
+    .map((file, i) => {
+      const webkitRelativePath = webkitRelativePaths[i]
+      return Object.assign(file, { webkitRelativePath })  // readonlyを上書き
     })
+    // 重要なファイルのformFileのみを取得
+    .filter((file) => paths.includes(file.webkitRelativePath))
+
+  // 一時ファイルを作成
+  const prefix = join(tmpdir(), 'savepoint-')
+  const tmpDir = mkdtempSync(prefix)
+  for (const file of files) {
+    const filename = file.name
+    const dirName = dirname(file.webkitRelativePath)
+    const buffer = Buffer.from(await file.arrayBuffer())
+
+    const fileDir = join(tmpDir, dirName)
+    const filePath = join(fileDir, filename)
+    mkdirSync(fileDir, { recursive: true })
+    writeFileSync(filePath, buffer)
+  }
+
+  // ドキュメントを読み込み
+  const loaders = {
+    '.csv': (path: string) => new CSVLoader(path),
+    '.docx': (path: string) => new DocxLoader(path),
+    '.json': (path: string) => new JSONLoader(path),
+    '.pdf': (path: string) => new PDFLoader(path),
+    '.pptx': (path: string) => new PPTXLoader(path),
+    '.txt': (path: string) => new TextLoader(path),
+  }
+
+  const loader = new MultiFileLoader(
+    paths
+      // loadersに拡張子が定義されているファイルのみを抽出
+      .filter((path: string) => extname(path) in loaders)
+      .map((path) => join(tmpDir, path)),
+    loaders,
   )
 
-  // スレッドの作成
-  // @ts-ignore
-  const thread = await openai.beta.threads.create({
-    // @ts-ignore
-    messages: [
-      {
-        role: 'user',
-        content: PROMPT,  // [{ type: 'text', text: PROMPT }, ...imageContents],
-        attachments: attachments,
-      }
-    ]
-  })
+  const documents = await loader.load()
+  const content = documents.reduce(
+    (content, document) => content + '\n\n' + document.pageContent,
+    ''  // 初期値
+  )
+
+  // 一時ファイルを削除
+  rmSync(tmpDir, { recursive: true })
   
-  // ランの作成
-  const stream = openai.beta.threads.runs.stream(thread.id, {
-    assistant_id: process.env.OPENAI_ASSISTANT_ID ?? '',
-  })
-
-  // アップロードしたファイルの削除
-  await Promise.all([
-    // ...imageContents.map(async (content) => {
-    //   await openai.files.del(content.image_file.file_id)
-    // }),
-    ...attachments.map(async (attachment) => {
-      await openai.files.del(attachment.file_id)
-    })
-  ])
-
-  const newStream = createStreamableValue(stream.toReadableStream())
-  return newStream.value
+  // プロジェクト概要を生成
+  const summaryStream = await streamSummaryTextAgent(content)
+  return summaryStream
 }
 
 // ProjectのDBへの保存・ファイルのS3へのアップロード
