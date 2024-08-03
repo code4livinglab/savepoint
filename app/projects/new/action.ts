@@ -1,26 +1,19 @@
 'use server'
 
-import path from 'path'
-import OpenAI from 'openai'
+import { embed } from 'ai'
 import pgvector from 'pgvector'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { createStreamableValue } from 'ai/rsc'
+import { openai } from '@ai-sdk/openai'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
-import { textMimeTypeList } from '@/app/_types/file'
-import { PROMPT } from '@/app/_types/prompt'
-import { auth } from "../../auth"
-import { revalidatePath } from 'next/cache'
+import { generateFilesObjectAgent, streamSummaryTextAgent } from './_agent/agents'
+import { documentsLoader, imagesLoader } from './_agent/loader'
+import { auth } from '../../auth'
 
 const prisma = new PrismaClient()
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  organization: process.env.OPENAI_ORGANIZATION,
-  project: process.env.OPENAI_PROJECT,
-})
-
 const s3Client = new S3Client({
   region: process.env.AWS_BUCKET_REGION,
   credentials: fromCognitoIdentityPool({
@@ -30,76 +23,31 @@ const s3Client = new S3Client({
 })
 
 // ファイルからdescriptionの生成
-export const confirmAction = async (formData: FormData) => {
-  // フォームの取得
-  const files = formData.getAll('files') as File[]
-  
-  // TODO: バリデーション
-
-  // Visionから入力するファイルのリストを作成
-  // const imageContents = await Promise.all(
-  //   files
-  //   .filter((file) => file.type.startsWith('image/'))
-  //   .map(async (formFile) => {
-  //     const file = await openai.files.create({
-  //       file: formFile,
-  //       purpose: 'assistants',
-  //     });
-      
-  //     return {
-  //       type: 'image_file',
-  //       image_file: { file_id: file.id },
-  //     };
-  //   })
-  // )
-  
-  // File Searchから入力するファイルのリストを作成
-  const attachments = await Promise.all(
-    files
-    .filter((file) => textMimeTypeList.includes(path.extname(file.name)))
-    .map(async (formFile) => {
-      const file = await openai.files.create({
-        file: formFile,
-        purpose: 'assistants',
-      })
-
-      return {
-        file_id: file.id,
-        tools: [{ type: 'file_search' }],
-      }
+export const confirmAction = async (
+  formData: FormData,
+  webkitRelativePaths: string[],
+) => {
+  // 重要なファイルをピックアップ
+  const paths = await generateFilesObjectAgent(webkitRelativePaths)
+  const formFiles = formData.getAll('files') as File[]
+  const files = formFiles
+    .map((file, i) => {
+      // formFileにwebkitRelativePathが含まれないため手動で追加
+      const webkitRelativePath = webkitRelativePaths[i]
+      return Object.assign(file, { webkitRelativePath })  // readonlyを上書き
     })
-  )
-
-  // スレッドの作成
-  // @ts-ignore
-  const thread = await openai.beta.threads.create({
-    // @ts-ignore
-    messages: [
-      {
-        role: 'user',
-        content: PROMPT,  // [{ type: 'text', text: PROMPT }, ...imageContents],
-        attachments: attachments,
-      }
-    ]
-  })
-  
-  // ランの作成
-  const stream = openai.beta.threads.runs.stream(thread.id, {
-    assistant_id: process.env.OPENAI_ASSISTANT_ID ?? '',
-  })
-
-  // アップロードしたファイルの削除
-  await Promise.all([
-    // ...imageContents.map(async (content) => {
-    //   await openai.files.del(content.image_file.file_id)
-    // }),
-    ...attachments.map(async (attachment) => {
-      await openai.files.del(attachment.file_id)
+    .filter((file) => {
+      // 重要なファイルのformFileのみを取得
+      return paths.includes(file.webkitRelativePath)
     })
-  ])
 
-  const newStream = createStreamableValue(stream.toReadableStream())
-  return newStream.value
+  // ファイルの読み込み
+  const text = await documentsLoader(files)
+  const images = await imagesLoader(files)
+
+  // ファイルからプロジェクト概要を生成
+  const summaryStream = await streamSummaryTextAgent(text, images)
+  return summaryStream
 }
 
 // ProjectのDBへの保存・ファイルのS3へのアップロード
@@ -119,20 +67,20 @@ export const saveAction = async (prevState: any, formData: FormData) => {
 
   try {
     // ペイロード
-    const id = uuidv4()
+    const id = randomUUID()
     const description = `# ${name}
 
 ${message}
 `
   
     // エンべディング
-    const response = await openai.embeddings.create({
-      input: description,
-      model: 'text-embedding-ada-002',
+    const { embedding } = await embed({
+      model: openai.embedding('text-embedding-ada-002'),
+      value: description,
     })
 
     // Projectのインサート
-    const embedding = pgvector.toSql(response.data[0].embedding)
+    const embeddingString = pgvector.toSql(embedding)
     const result: number = await prisma.$executeRaw`
 INSERT INTO
   public."Project" (
@@ -144,7 +92,7 @@ INSERT INTO
     ${id},
     ${name},
     ${description},
-    ${embedding}::vector
+    ${embeddingString}::vector
   )
 `
 

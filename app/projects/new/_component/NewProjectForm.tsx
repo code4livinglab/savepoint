@@ -22,13 +22,15 @@ const NewProjectForm = () => {
   const newAction = async (formData: FormData) => {
     // 確認するとき
     if (formData.get('status') === 'confirm') {
-      const response = await confirmAction(formData)
-      for await (const value of readStreamableValue(response)) {
-        const buffer = new Uint8Array(value).buffer
-        const text = new TextDecoder().decode(buffer)
-        const json = JSON.parse(text)
-        const delta = json.data?.delta?.content?.[0]?.text?.value ?? ''
-        setDescription((description) => description + delta)
+      const files = formData.getAll('files') as File[]
+      const webkitRelativePaths = files.map(file => {
+        // formFileにwebkitRelativePathが含まれないため手動で追加
+        return file.webkitRelativePath
+      })
+      
+      const response = await confirmAction(formData, webkitRelativePaths)
+      for await (const content of readStreamableValue(response)) {
+        setDescription(content as string)
       }
     }
     
@@ -82,7 +84,8 @@ const NewProjectForm = () => {
           />
         </div>
       )}
-      <input type="file" name="files" multiple className="my-3" />
+      {/* @ts-ignore */}
+      <input type="file" name="files" webkitdirectory="true" className="my-3" />
       <p className="text-sm my-3">
         ※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。
       </p>
