@@ -1,5 +1,6 @@
 'use server'
 
+import { embed } from 'ai'
 import pgvector from 'pgvector'
 import { randomUUID } from 'crypto'
 import { revalidatePath } from 'next/cache'
@@ -73,13 +74,13 @@ ${message}
 `
   
     // エンべディング
-    const response = await openai.embeddings.create({
-      input: description,
-      model: 'text-embedding-ada-002',
+    const { embedding } = await embed({
+      model: openai.embedding('text-embedding-ada-002'),
+      value: description,
     })
 
     // Projectのインサート
-    const embedding = pgvector.toSql(response.data[0].embedding)
+    const embeddingString = pgvector.toSql(embedding)
     const result: number = await prisma.$executeRaw`
 INSERT INTO
   public."Project" (
@@ -91,7 +92,7 @@ INSERT INTO
     ${id},
     ${name},
     ${description},
-    ${embedding}::vector
+    ${embeddingString}::vector
   )
 `
 
