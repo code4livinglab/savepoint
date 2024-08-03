@@ -9,7 +9,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { PrismaClient } from '@prisma/client'
 import { generateFilesObjectAgent, streamSummaryTextAgent } from './_agent/agents'
-import { filesLoader } from './_agent/loader'
+import { documentsLoader, imagesLoader } from './_agent/loader'
 import { auth } from '../../auth'
 
 const prisma = new PrismaClient()
@@ -40,9 +40,12 @@ export const confirmAction = async (
       return paths.includes(file.webkitRelativePath)
     })
 
+  // ファイルの読み込み
+  const text = await documentsLoader(files)
+  const images = await imagesLoader(files)
+
   // ファイルからプロジェクト概要を生成
-  const content = await filesLoader(files)
-  const summaryStream = await streamSummaryTextAgent(content)
+  const summaryStream = await streamSummaryTextAgent(text, images)
   return summaryStream
 }
 
