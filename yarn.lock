@@ -1409,7 +1409,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@langchain/community@npm:^0.2.22":
+"@langchain/community@npm:^0.2.23":
   version: 0.2.23
   resolution: "@langchain/community@npm:0.2.23"
   dependencies:
@@ -3061,7 +3061,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^9, @types/uuid@npm:^9.0.1":
+"@types/uuid@npm:^9.0.1":
   version: 9.0.8
   resolution: "@types/uuid@npm:9.0.8"
   checksum: 10/b8c60b7ba8250356b5088302583d1704a4e1a13558d143c549c408bf8920535602ffc12394ede77f8a8083511b023704bc66d1345792714002bfa261b17c5275
@@ -3215,7 +3215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ai@npm:^3.2.34":
+"ai@npm:^3.3.0":
   version: 3.3.0
   resolution: "ai@npm:3.3.0"
   dependencies:
@@ -7432,7 +7432,7 @@ __metadata:
     "@emotion/react": "npm:^11.11.1"
     "@emotion/styled": "npm:^11.11.0"
     "@fontsource/roboto": "npm:^5.0.8"
-    "@langchain/community": "npm:^0.2.22"
+    "@langchain/community": "npm:^0.2.23"
     "@mui/icons-material": "npm:^5.14.18"
     "@mui/material": "npm:^5.14.18"
     "@prisma/client": "npm:^5.8.0"
@@ -7443,8 +7443,7 @@ __metadata:
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
     "@types/three": "npm:^0.158.3"
-    "@types/uuid": "npm:^9"
-    ai: "npm:^3.2.34"
+    ai: "npm:^3.3.0"
     autoprefixer: "npm:^10.0.1"
     aws-sdk: "npm:^2.1500.0"
     bcryptjs: "npm:^2.4.3"
@@ -7461,7 +7460,6 @@ __metadata:
     next: "npm:14.0.3"
     next-auth: "npm:^5.0.0-beta.19"
     officeparser: "npm:^4.1.1"
-    openai: "npm:^4.52.7"
     pdf-parse: "npm:^1.1.1"
     pgvector: "npm:^0.1.7"
     postcss: "npm:^8"
@@ -7705,7 +7703,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openai@npm:^4.49.1, openai@npm:^4.52.7":
+"openai@npm:^4.49.1":
   version: 4.54.0
   resolution: "openai@npm:4.54.0"
   dependencies:
