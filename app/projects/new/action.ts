@@ -1,7 +1,7 @@
 'use server'
 
 import pgvector from 'pgvector'
-import { v4 as uuidv4 } from 'uuid'
+import { randomUUID } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { openai } from '@ai-sdk/openai'
@@ -66,7 +66,7 @@ export const saveAction = async (prevState: any, formData: FormData) => {
 
   try {
     // ペイロード
-    const id = uuidv4()
+    const id = randomUUID()
     const description = `# ${name}
 
 ${message}
