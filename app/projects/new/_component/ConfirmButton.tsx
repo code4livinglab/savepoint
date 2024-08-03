@@ -6,18 +6,18 @@ const ConfirmButton = () => {
     <>
       {pending ? (
         <button
-          className="w-full text-gray-800 bg-white border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-200 focus:outline-none focus:border-gray-600"
+          className="w-full text-white border border-white rounded-full my-3 p-3 bg-gray-900"
         >
           プロジェクト概要を生成しています…
         </button>
       ) : (
         <button
-          className="w-full text-gray-800 bg-white border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-200 focus:outline-none focus:border-gray-600"
+          className="w-full text-white border border-white rounded-full my-3 p-3 hover:bg-gray-900"
           type="submit"
           name="status"
           value="confirm"
         >
-          確認する
+          プロジェクト概要を生成する
         </button>
       )}
     </>
