@@ -80,10 +80,7 @@ export const documentsLoader = async (files: File[]) => {
 
     const fileDir = join(tmpDir, dirName)
     const filePath = join(fileDir, filename)
-    const hoge = readFileSync(filePath).toString()
-    console.log({hoge})
-    console.log(file.type)
-    return hoge
+    return readFileSync(filePath).toString()
   })
   
   const content = documents.reduce(
