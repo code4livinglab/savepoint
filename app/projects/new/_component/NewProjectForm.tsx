@@ -23,7 +23,10 @@ const NewProjectForm = () => {
     // 確認するとき
     if (formData.get('status') === 'confirm') {
       const files = formData.getAll('files') as File[]
-      const webkitRelativePaths = files.map(file => file.webkitRelativePath)
+      const webkitRelativePaths = files.map(file => {
+        // formFileにwebkitRelativePathが含まれないため手動で追加
+        return file.webkitRelativePath
+      })
       
       const response = await confirmAction(formData, webkitRelativePaths)
       for await (const content of readStreamableValue(response)) {
