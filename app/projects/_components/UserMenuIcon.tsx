@@ -1,7 +1,8 @@
 'use client'
 
-import { AccountCircle, Logout } from '@mui/icons-material'
+import { Logout } from '@mui/icons-material'
 import {
+  Avatar,
   ListItemIcon,
   IconButton,
   MenuItem,
@@ -28,9 +29,9 @@ export const UserMenuIcon = () => {
         edge="end"
         color="inherit"
         onClick={handleOpen}
-        sx={{ margin: 0 }}
+        sx={{ width: 56, height: 56, margin: 0 }}
       >
-        <AccountCircle />
+        <Avatar />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
