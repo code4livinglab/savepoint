@@ -10,15 +10,14 @@ import {
   Typography,
 } from '@mui/material'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { readStreamableValue } from 'ai/rsc'
 import { confirmAction, saveAction } from '../action'
 import SaveButton from './SaveButton'
 import ConfirmButton from './ConfirmButton'
+import { CloseButton } from '../../_components/CloseButton'
 
 const NewProjectForm = () => {
   const [description, setDescription] = useState('')  // プロジェクト概要
-  const router = useRouter()
 
   // 確認するときとセーブするときでアクションを分ける
   const newAction = async (formData: FormData) => {
@@ -47,7 +46,7 @@ const NewProjectForm = () => {
       component="form"
       action={newAction}
       elevation={3}
-      sx={{ width: 480, margin: 3, padding: 2 }}
+      sx={{ width: 480, maxHeight: 720, margin: 3, padding: 2 }}
       className="absolute bottom-0 right-0 overflow-auto"
     >
       <Stack spacing={2}>
@@ -61,7 +60,7 @@ const NewProjectForm = () => {
           name="description"
           label="プロジェクト概要"
           multiline
-          rows={16}
+          minRows={12}
           defaultValue={description}
         />
         <ButtonGroup variant="contained" color="inherit">
@@ -88,9 +87,7 @@ const NewProjectForm = () => {
 クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。'}
         </Typography>
         <SaveButton />
-        <Button variant="outlined" onClick={() => router.push('/projects')}>
-          閉じる
-        </Button>
+        <CloseButton />
       </Stack>
     </Paper>
   )

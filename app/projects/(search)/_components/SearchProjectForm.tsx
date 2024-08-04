@@ -7,7 +7,7 @@ export const SearchProjectForm = ({
   formAction: (formData: FormData) => void
 }) => {
   return (
-    <Paper component="form" action={formAction}>
+    <Paper component="form" action={formAction} className="grow">
       <Stack
         direction="row"
         spacing={1}
@@ -17,7 +17,8 @@ export const SearchProjectForm = ({
         <InputBase
           name="query"
           placeholder="プロジェクトを検索する"
-          sx={{ width: 300, paddingLeft: 1 }}
+          sx={{ paddingLeft: 1 }}
+          className="grow"
         />
         <IconButton type="submit" >
           <SearchIcon />

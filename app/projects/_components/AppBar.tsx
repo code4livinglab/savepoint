@@ -26,7 +26,7 @@ export const AppBar = () => {
       <Stack
         direction="row"
         spacing={3}
-        sx={{ margin: 3 }}
+        sx={{ width: 480, margin: 3 }}
         className="absolute items-center"
       >
         <Typography variant="h5">savepoint</Typography>

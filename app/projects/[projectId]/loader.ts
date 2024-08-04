@@ -30,6 +30,8 @@ export const getRole = async (projectId: string) => {
   } catch (error) {
     console.error('Error retrieving user role:', error)
     return null
+  } finally {
+    await prisma.$disconnect()
   }
 }
 
@@ -60,5 +62,7 @@ WHERE
   } catch (error) {
     console.error('Error loading project:', error)
     return []
+  } finally {
+    await prisma.$disconnect()
   }
 }
