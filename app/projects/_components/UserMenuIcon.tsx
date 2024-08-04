@@ -2,7 +2,6 @@
 
 import { AccountCircle, Logout } from '@mui/icons-material'
 import {
-  Box,
   ListItemIcon,
   IconButton,
   MenuItem,
@@ -19,21 +18,17 @@ export const UserMenuIcon = () => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
-  const handleSignOut = async () => {
-    await signOutAction()
-  }
+  const handleClose = () => { setAnchorEl(null) }
+  const handleSignOut = async () => { await signOutAction() }
 
   return (
-    <Box>
+    <>
       <IconButton
         size="large"
         edge="end"
         color="inherit"
         onClick={handleOpen}
+        sx={{ margin: 0 }}
       >
         <AccountCircle />
       </IconButton>
@@ -49,6 +44,6 @@ export const UserMenuIcon = () => {
           ログアウトする
         </MenuItem>
       </Menu>
-    </Box>
+    </>
   )
 }

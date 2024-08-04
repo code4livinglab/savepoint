@@ -1,8 +1,7 @@
 import React from 'react'
 import ProjectList from './(list)/_components/ProjectList'
 import SaveProjectButton from './(list)/_components/SaveProjectButton'
-import { StyledAppBar } from './_components/SearchAppBar'
-import ProjectSearchBar from './(search)/_components/ProjectSearchBar'
+import { StyledAppBar } from './_components/StyledAppBar'
 
 const ProjectLayout = ({
   children,
@@ -10,13 +9,14 @@ const ProjectLayout = ({
   children: React.ReactNode,
 }) => {
   return (
-    <div className="static">
+    <>
       <StyledAppBar />
-      <ProjectList />
-      {/* <ProjectSearchBar /> */}
-      <SaveProjectButton />
-      { children }
-    </div>
+      {/* <div className="static">
+        <ProjectList />
+        <SaveProjectButton />
+        { children }
+      </div> */}
+    </>
   )
 }
 
