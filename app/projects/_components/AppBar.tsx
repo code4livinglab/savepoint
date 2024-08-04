@@ -31,13 +31,13 @@ export const AppBar = () => {
       >
         <Typography variant="h5">savepoint</Typography>
         <SearchProjectForm formAction={newFormAction} />
-        {diplayList && projectList.length > 0 && (
-          <ProjectSearchList
-            projectList={projectList}
-            onClose={handleClose}
-          />
-        )}
       </Stack>
+      {diplayList && projectList.length > 0 && (
+        <ProjectSearchList
+          projectList={projectList}
+          onClose={handleClose}
+        />
+      )}
       <Box sx={{ margin: 3 }} className="absolute top-0 right-0">
         <UserMenuIcon />
       </Box>
