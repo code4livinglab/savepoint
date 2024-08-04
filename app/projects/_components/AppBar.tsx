@@ -15,11 +15,11 @@ export const AppBar = () => {
 
   const newFormAction = (formData: FormData) => {
     formAction(formData)
-    setDisplaysList(true)
+    setDisplayList(true)
   }
 
   const handleClose = () => {
-    setDisplaysList(false)
+    setDisplayList(false)
   }
 
   return (
