@@ -35,7 +35,7 @@ export const AppBar = () => {
         </Link>
         <SearchProjectForm formAction={newFormAction} />
       </Stack>
-      {diplayList && projectList.length > 0 && (
+      {displayList && projectList.length > 0 && (
         <ProjectSearchList
           projectList={projectList}
           onClose={handleClose}
