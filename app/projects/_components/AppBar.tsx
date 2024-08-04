@@ -1,6 +1,7 @@
 'use client'
 
 import { Box, Stack, Typography } from '@mui/material'
+import Link from 'next/link'
 import { useFormState } from 'react-dom'
 import { useState } from 'react'
 import { UserMenuIcon } from './UserMenuIcon'
@@ -29,7 +30,9 @@ export const AppBar = () => {
         sx={{ width: 480, margin: 3 }}
         className="absolute items-center"
       >
-        <Typography variant="h5">savepoint</Typography>
+        <Link href="/projects">
+          <Typography variant="h5">savepoint</Typography>
+        </Link>
         <SearchProjectForm formAction={newFormAction} />
       </Stack>
       {diplayList && projectList.length > 0 && (
