@@ -25,7 +25,7 @@
     "bcryptjs": "^2.4.3",
     "csv-parse": "^5.5.3",
     "csv-stringify": "^6.4.5",
-    "d3-dsv": "^3.0.1",
+    "d3-dsv": "^2.0.0",
     "langchain": "^0.2.12",
     "langsmith": "^0.1.40",
     "mammoth": "^1.8.0",
