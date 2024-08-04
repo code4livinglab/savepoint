@@ -1,17 +1,14 @@
 import { Box } from '@mui/material'
 // import { File } from '@/app/_types/file'
 import { Project } from '@/app/_types/project'
-import MicroNDA from './MicroNDA'
 import Download from './Download'
 import { BackButton } from './BackButton'
 import { MarkdownViewer } from './MarkdownViewer'
 
 const ProjectDetails = ({
   project,
-  userRole,
 }: {
   project: Project,
-  userRole: string | null,
 }) => {
   return (
     <Box sx={{mt: 2}} className="absolute top-20 m-5 flex flex-col max-h-[85%] text-white bg-gray-800 bg-opacity-80 overflow-auto rounded-xl border-2 border-gray-400 p-5">
@@ -30,11 +27,7 @@ const ProjectDetails = ({
           ))}
         </>
       )} */}
-      {userRole ? (
-        <Download projectId={project.id} />
-      ) : (
-        <MicroNDA projectId={project.id} />
-      )}
+      <Download projectId={project.id} />
     </Box>
   )
 }

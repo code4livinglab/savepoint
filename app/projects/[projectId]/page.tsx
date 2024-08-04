@@ -7,10 +7,9 @@ const ProjectDetailsPage = async ({
   params: { projectId: string },
 }) => {
   const project = await loader(params.projectId)
-  const userRole = await getRole(params.projectId) ?? ''
-
+  
   return (
-    <ProjectDetails project={project} userRole={userRole} />
+    <ProjectDetails project={project} />
   )
 }
 

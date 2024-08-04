@@ -5,7 +5,7 @@ import { Fab } from '@mui/material'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export const SaveProjectButton = async () => {
+export const SaveProjectButton = () => {
   const pathname = usePathname()
   if (pathname === '/projects/new') {
     return null
@@ -15,6 +15,7 @@ export const SaveProjectButton = async () => {
     <Fab
       variant="extended"
       color="primary"
+      size="large"
       sx={{ margin: 3 }}
       className="absolute bottom-0 right-0"
     >
