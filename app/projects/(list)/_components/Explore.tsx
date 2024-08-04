@@ -262,16 +262,15 @@ const Explore = ({
   }
 
   return (
-    <div className="relative">
-      {objects.map((obj, index) => (
-        <ObjectLabel
-          key={index}
-          obj={obj}
-          camera={cameraRef.current}
-          renderer={rendererRef.current}
-        />
-      ))}
-      <div ref={mountRef}></div>
+    <div ref={mountRef}>
+    {objects.map((obj, index) => (
+      <ObjectLabel
+        key={index}
+        obj={obj}
+        camera={cameraRef.current}
+        renderer={rendererRef.current}
+      />
+    ))}  
     </div>
   )
 }

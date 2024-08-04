@@ -11,11 +11,9 @@ const ProjectLayout = ({
   return (
     <>
       <AppBar />
-      {/* <div className="static">
-        <ProjectList />
-        <SaveProjectButton />
-        { children }
-      </div> */}
+      <ProjectList />
+      <SaveProjectButton />
+      { children }
     </>
   )
 }
