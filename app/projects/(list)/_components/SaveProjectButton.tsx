@@ -1,9 +1,16 @@
+'use client'
+
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { Fab } from '@mui/material'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export const SaveProjectButton = async () => {
-  //
+  const pathname = usePathname()
+  if (pathname === '/projects/new') {
+    return null
+  }
+
   return (
     <Fab
       variant="extended"

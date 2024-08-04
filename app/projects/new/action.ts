@@ -51,7 +51,10 @@ export const confirmAction = async (
 }
 
 // ProjectのDBへの保存・ファイルのS3へのアップロード
-export const saveAction = async (prevState: any, formData: FormData) => {
+export const saveAction = async (
+  formData: FormData,
+  webkitRelativePaths: string[],
+) => {
   // フォームの取得
   const name = formData.get('name')?.toString() ?? ''
   const message = formData.get('description')?.toString() ?? ''
@@ -134,8 +137,4 @@ INSERT INTO
 
   revalidatePath('/projects')
   redirect('/projects')
-  return {
-    status: true,
-    data: {},
-  }
 }
