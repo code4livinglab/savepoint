@@ -68,7 +68,7 @@ const SignInForm = () => {
           <MUILink
             component={Link}
             href="/users/sign-up"
-            sx={{ color: 'primary.main' }}
+            sx={{ color: 'info.main' }}
           >
             Sign upはこちら
           </MUILink>
