@@ -1,7 +1,7 @@
 import React from 'react'
 import ProjectList from './(list)/_components/ProjectList'
 import SaveProjectButton from './(list)/_components/SaveProjectButton'
-import { StyledAppBar } from './_components/StyledAppBar'
+import { AppBar } from './_components/AppBar'
 
 const ProjectLayout = ({
   children,
@@ -10,7 +10,7 @@ const ProjectLayout = ({
 }) => {
   return (
     <>
-      <StyledAppBar />
+      <AppBar />
       {/* <div className="static">
         <ProjectList />
         <SaveProjectButton />

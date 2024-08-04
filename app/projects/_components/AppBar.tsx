@@ -8,7 +8,7 @@ import ProjectSearchList from '../(search)/_components/ProjectSearchList'
 import { SearchProjectForm } from '../(search)/_components/SearchProjectForm'
 import { action } from '../(search)/action'
 
-export const StyledAppBar = () => {
+export const AppBar = () => {
   const [projectList, formAction] = useFormState(action, [])
   const [diplayList, setDisplaysList] = useState(false)
 
