@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
     "@langchain/community": "^0.2.23",
+    "@mui/base": "5.0.0-beta.40",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "@prisma/client": "^5.8.0",
