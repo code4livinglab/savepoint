@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { TextField, Box, Typography, Alert } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Link as MUILink,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -24,11 +31,11 @@ const SignUpForm = () => {
   }, [state.success, router]);
 
   return (
-    <Box className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Box className="space-y-4 p-6 max-w-md w-full bg-white shadow-md rounded-lg">
+    <Box className="flex items-center justify-center min-h-screen">
+      <Paper elevation={3} className="space-y-4 p-6 max-w-md w-full rounded-lg">
         <Typography
           variant="h3"
-          className="text-center font-bold mb-4 text-black"
+          className="text-center font-bold mb-4"
         >
           SAVEPOINT
         </Typography>
@@ -77,11 +84,15 @@ const SignUpForm = () => {
         </Box>
         <Typography variant="body2" className="text-center mt-4">
           すでにアカウントをお持ちですか？{" "}
-          <Link href="/users/sign-in" className="text-blue-500 hover:underline">
+          <MUILink
+            component={Link}
+            href="/users/sign-in"
+            sx={{ color: 'primary.main' }}
+          >
             Sign inはこちら
-          </Link>
+          </MUILink>
         </Typography>
-      </Box>
+      </Paper>
     </Box>
   );
 };
