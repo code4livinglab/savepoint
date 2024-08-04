@@ -11,7 +11,7 @@ import { action } from '../(search)/action'
 
 export const AppBar = () => {
   const [projectList, formAction] = useFormState(action, [])
-  const [diplayList, setDisplaysList] = useState(false)
+  const [displayList, setDisplayList] = useState(false)
 
   const newFormAction = (formData: FormData) => {
     formAction(formData)
