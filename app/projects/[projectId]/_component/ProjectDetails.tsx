@@ -21,10 +21,6 @@ export const ProjectDetails = ({
       className="absolute bottom-0 left-0 overflow-auto"
     >
       <Stack spacing={2}>
-        <TextField
-          name="name"
-          label="プロジェクト名"
-        />
         <MarkdownViewer project={project} />
         {/* {project.file_names && project.file_names?.length > 0 && (
           <>
