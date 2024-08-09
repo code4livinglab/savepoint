@@ -1,16 +1,13 @@
 import { Project } from '@/app/_types/project'
 import { useRouter } from 'next/navigation'
 import {
-  ButtonGroup,
-  Button,
   List,
   ListItemButton,
   Paper,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material'
-import { CloseButton } from '../../_components/CloseButton'
+import { CloseButton } from '../_components/CloseButton'
 
 
 const ProjectSearchList = ({
@@ -53,7 +50,7 @@ const ProjectSearchList = ({
           )
         })}
       </List>
-      <CloseButton />
+      <CloseButton onClick={onClose}/>
     </Paper>
   )
 }
