@@ -2,6 +2,7 @@
 
 import { Box, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useFormState } from 'react-dom'
 import { useState } from 'react'
 import { UserMenuIcon } from './UserMenuIcon'
@@ -12,9 +13,11 @@ import { action } from '../(search)/action'
 export const AppBar = () => {
   const [projectList, formAction] = useFormState(action, [])
   const [displayList, setDisplayList] = useState(false)
+  const router = useRouter()
 
   const newFormAction = (formData: FormData) => {
     formAction(formData)
+    router.push('/projects')
     setDisplayList(true)
   }
 
