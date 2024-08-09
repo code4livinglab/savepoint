@@ -3,7 +3,6 @@ import Explore from './Explore'
 import { pca } from '../_lib/pca'
 import { loader } from '../loader'
 
-
 const ProjectList = async () => {
   const projects = await loader()
   const embeddings = projects.map((project) => project.embedding)
@@ -14,9 +13,7 @@ const ProjectList = async () => {
   })
   
   return (
-    <div className="overflow-hidden">
-      <Explore projects={newProjects} />
-    </div>
+    <Explore projects={newProjects} />
   )
 }
 

@@ -4,7 +4,14 @@ import Link from "next/link";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { TextField, Box, Typography, Alert } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Link as MUILink,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { SignInFormButton } from "./SignInFormButton";
 import { signInAction } from "./action";
 
@@ -24,11 +31,11 @@ const SignInForm = () => {
   }, [state.success, router]);
 
   return (
-    <Box className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Box className="space-y-4 p-6 max-w-md w-full bg-white shadow-md rounded-lg">
+    <Box className="flex items-center justify-center min-h-screen">
+      <Paper elevation={3} className="space-y-4 p-6 max-w-md w-full rounded-lg">
         <Typography
           variant="h3"
-          className="text-center font-bold mb-4 text-black"
+          className="text-center font-bold mb-4"
         >
           SAVEPOINT
         </Typography>
@@ -58,11 +65,15 @@ const SignInForm = () => {
         </Box>
         <Typography variant="body2" className="text-center mt-4">
           アカウントをお持ちでないですか？{" "}
-          <Link href="/users/sign-up" className="text-blue-500 hover:underline">
+          <MUILink
+            component={Link}
+            href="/users/sign-up"
+            sx={{ color: 'info.main' }}
+          >
             Sign upはこちら
-          </Link>
+          </MUILink>
         </Typography>
-      </Box>
+      </Paper>
     </Box>
   );
 };

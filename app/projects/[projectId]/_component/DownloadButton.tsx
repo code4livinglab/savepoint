@@ -1,25 +1,27 @@
 'use client'
 
+import { Button } from '@mui/material'
 import { downloadAction } from '../action'
 
-const Download = ({
+export const DownloadButton = ({
   projectId,
 }: {
   projectId: string,
 }) => {
   return (
-    <button
-      className="text-gray-300 border border-gray-300 rounded-full my-3 p-3 hover:bg-gray-900 focus:outline-none focus:border-gray-600"
+    <Button
+      variant="contained"
+      type='submit'
       onClick={() => downloadProjectFiles(projectId)}
     >
       ロードする
-    </button>
+    </Button>
   )
 }
 
 const downloadProjectFiles = async (projectId: string) => {
   const files = await downloadAction(projectId)
-  
+
   files.forEach((file) => {
     if (!file || !file.key || !file.byteArray || !file.contentType) {
       return null
@@ -38,5 +40,3 @@ const downloadProjectFiles = async (projectId: string) => {
     a.remove()
   })
 }
-
-export default Download

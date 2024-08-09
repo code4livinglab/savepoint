@@ -1,96 +1,95 @@
 'use client'
 
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import {
+  ButtonGroup,
+  Button,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useState } from 'react'
-import { useFormState } from 'react-dom'
-import { useRouter } from 'next/navigation'
 import { readStreamableValue } from 'ai/rsc'
-import ConfirmButton from './ConfirmButton'
-import SaveButton from './SaveButton'
 import { confirmAction, saveAction } from '../action'
-
-const initialSaveState = {
-  status: false,
-  data: {},
-}
+import SaveButton from './SaveButton'
+import ConfirmButton from './ConfirmButton'
+import { CloseButton } from '../../_components/CloseButton'
 
 const NewProjectForm = () => {
   const [description, setDescription] = useState('')  // プロジェクト概要
-  const [save, saveFormAction] = useFormState(saveAction, initialSaveState)
-  const router = useRouter()
 
   // 確認するときとセーブするときでアクションを分ける
   const newAction = async (formData: FormData) => {
-    // 確認するとき
+    const files = formData.getAll('files') as File[]
+    const webkitRelativePaths = files.map(file => {
+      // formFileにwebkitRelativePathが含まれないため手動で追加
+      return file.webkitRelativePath
+    })
+
+    // 概要生成
     if (formData.get('status') === 'confirm') {
-      const files = formData.getAll('files') as File[]
-      const webkitRelativePaths = files.map(file => {
-        // formFileにwebkitRelativePathが含まれないため手動で追加
-        return file.webkitRelativePath
-      })
-      
       const response = await confirmAction(formData, webkitRelativePaths)
       for await (const content of readStreamableValue(response)) {
         setDescription(content as string)
       }
     }
     
-    // セーブするとき
+    // セーブ
     if (formData.get('status') === 'save') {
-      saveFormAction(formData)
+      saveAction(formData, webkitRelativePaths)
     }
   }
 
   return (
-    <form
-      className="flex flex-col absolute z-10 top-0 right-0 bg-gray-800 bg-opacity-80 max-h-[85%] max-w-[40%] overflow-auto text-white rounded-xl border-2 border-gray-400 m-5 mt-20 p-5"
+    <Paper
+      component="form"
       action={newAction}
+      elevation={3}
+      sx={{ width: 480, maxHeight: 720, margin: 3, padding: 2 }}
+      className="absolute bottom-0 right-0 overflow-auto"
     >
-      <button onClick={router.back} className="flex justify-end">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-      <div className="my-5">
-        <p className="text-xl">プロジェクト名*</p>
-        {!save.status && typeof save.message !== 'undefined' && (
-          <p>{ save.message }</p>
-        )}
-        <input
+      <Stack spacing={2}>
+        <TextField
           name="name"
-          type="text"
-          className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
+          label="プロジェクト名"
         />
-      </div>
-      {/* @ts-ignore */}
-      <input type="file" name="files" webkitdirectory="true" />
-      <ConfirmButton />
-      {description.length > 0 && (
-        <div className="my-5">
-          <textarea
-            key={description}  // textareaの再レンダリングを走らせ、defalutValueを更新する。
-            name="description"
-            rows={8}
-            className="w-full bg-inherit bg-clip-border border rounded-xl mt-2 p-3 focus:outline-none focus:bg-gray-900 focus:border-2"
-            defaultValue={description}
-          />
-        </div>
-      )}
-      <p className="text-sm my-3">
-        ※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。
-      </p>
-      {description.length > 0 && <SaveButton />}
-    </form>
+        <TextField
+          key={description}  // textareaの再レンダリングを走らせ、defalutValueを更新する。
+          id="outlined-multiline-flexible"
+          name="description"
+          label="プロジェクト概要"
+          multiline
+          minRows={12}
+          defaultValue={description}
+        />
+        <ButtonGroup variant="contained" color="inherit">
+          <Button
+            component="label"
+            role={undefined}
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}
+            className="grow"
+          >
+            <span>ファイルをアップロードする</span>
+            <input
+              type="file"
+              name="files"
+              // @ts-ignore
+              webkitdirectory="true"
+              className="hidden"
+            />
+          </Button>
+          <ConfirmButton />
+        </ButtonGroup>
+        <Typography variant="caption">
+          {'※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。\
+クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。'}
+        </Typography>
+        <SaveButton />
+        <CloseButton />
+      </Stack>
+    </Paper>
   )
 }
 

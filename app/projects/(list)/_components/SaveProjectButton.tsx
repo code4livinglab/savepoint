@@ -1,13 +1,26 @@
-import Link from "next/link"
+'use client'
 
-const SaveProjectButton = async () => {
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { Fab } from '@mui/material'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+export const SaveProjectButton = () => {
+  const pathname = usePathname()
+  if (pathname === '/projects/new') {
+    return null
+  }
+
   return (
-    <div className="absolute z-10 bottom-0 right-0 m-5">
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        <Link href="/projects/new">セーブ</Link>
-      </button>
-    </div>
+    <Fab
+      variant="extended"
+      color="primary"
+      size="large"
+      sx={{ margin: 3 }}
+      className="absolute bottom-0 right-0"
+    >
+      <CloudUploadIcon sx={{ mr: 1 }} />
+      <Link href="/projects/new">セーブする</Link>
+    </Fab>
   )
 }
-
-export default SaveProjectButton
