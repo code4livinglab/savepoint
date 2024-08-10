@@ -13,6 +13,7 @@ const ProjectList = async () => {
   })
   
   return (
+    // @ts-ignore
     <Explore projects={newProjects} />
   )
 }

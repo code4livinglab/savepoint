@@ -3,6 +3,7 @@
 import { Project } from '@/app/_types/project'
 import {
   ArcballControls,
+  Billboard,
   GizmoHelper,
   GizmoViewport,
   Instances,
@@ -15,25 +16,38 @@ import {
   Text,
   KeyboardControls,
 } from '@react-three/drei'
-import { Canvas, ThreeElements } from '@react-three/fiber'
-import Link from 'next/link'
-import React, { useState, useRef } from 'react'
+import { Canvas, Vector3 } from '@react-three/fiber'
+import { useRouter } from 'next/navigation'
+import { useRef } from 'react'
 import * as THREE from 'three'
 
-function Box(props: ThreeElements['mesh']) {
+const Box = ({
+  project,
+}: {
+  project: Project,
+}) => {
   const meshRef = useRef<THREE.Mesh>()
-  const [active, setActive] = useState(false)
+  const router = useRouter()
 
   return (
     <mesh
-      {...props}
+      position={project.embedding as Vector3}
       // @ts-ignore
       ref={meshRef}
-      scale={active ? 1.5 : 1}
-      onClick={(event) => setActive(!active)}
+      onClick={() => { router.push(`/projects/${project.id}`) }}
     >
       <sphereGeometry />
       <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
+      <Billboard>
+        <Text
+          fontSize={1}
+          maxWidth={12}
+          anchorY="top"
+          overflowWrap="break-word"
+        >
+          {project.name}
+        </Text>
+      </Billboard>
     </mesh>
   )
 }
@@ -52,14 +66,9 @@ const Explore = ({
           <GizmoViewport />
         </GizmoHelper>
         <Stars />
-        <spotLight position={[0, 0, 0]} intensity={100} />
-        <mesh>
-          <sphereGeometry args={[10]} />
-          <meshStandardMaterial emissive="red" emissiveIntensity={100} />
-        </mesh>
         {/* @ts-ignore */}
-        {projects.map((project) => (
-          <Box position={project.embedding} />
+        {projects.map((project, i) => (
+          <Box key={i} project={project} />
         ))}
       </Canvas>
     </>
