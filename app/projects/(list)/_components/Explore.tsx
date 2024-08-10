@@ -1,46 +1,68 @@
 'use client'
 
 import { Project } from '@/app/_types/project'
+import {
+  ArcballControls,
+  GizmoHelper,
+  GizmoViewport,
+  Instances,
+  Loader,
+  QuadraticBezierLine,
+  ScreenSizer,
+  SoftShadows,
+  Stars,
+  Shadow,
+  Text,
+  KeyboardControls,
+} from '@react-three/drei'
+import { Canvas, ThreeElements } from '@react-three/fiber'
 import Link from 'next/link'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import * as THREE from 'three'
-
-import { Canvas, useFrame, ThreeElements } from '@react-three/fiber'
 
 function Box(props: ThreeElements['mesh']) {
   const meshRef = useRef<THREE.Mesh>()
   const [active, setActive] = useState(false)
-  useFrame((state, delta) => (meshRef.current.rotation.x += delta))
 
   return (
     <mesh
       {...props}
+      // @ts-ignore
       ref={meshRef}
       scale={active ? 1.5 : 1}
       onClick={(event) => setActive(!active)}
     >
-      <sphereGeometry args={[0.05]} />
-      <meshStandardMaterial />
+      <sphereGeometry />
+      <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
     </mesh>
   )
 }
 
 const Explore = ({
+  // @ts-ignore
   projects,
 }: {
   prjects: Project[],
 }) => {
   return (
-    <Canvas>
-      <ambientLight intensity={0.1} />
-      <directionalLight position={[0, 0, 5]} />
-      {/* <ambientLight intensity={Math.PI / 2} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-      <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} /> */}
-      {projects.map((project) => (
-        <Box position={project.embedding} />
-      ))}
-    </Canvas>
+    <>
+      <Canvas>
+        <ArcballControls makeDefault />
+        <GizmoHelper alignment="bottom-left">
+          <GizmoViewport />
+        </GizmoHelper>
+        <Stars />
+        <spotLight position={[0, 0, 0]} intensity={100} />
+        <mesh>
+          <sphereGeometry args={[10]} />
+          <meshStandardMaterial emissive="red" emissiveIntensity={100} />
+        </mesh>
+        {/* @ts-ignore */}
+        {projects.map((project) => (
+          <Box position={project.embedding} />
+        ))}
+      </Canvas>
+    </>
   )
 }
 

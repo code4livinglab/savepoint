@@ -5,7 +5,7 @@ import { normalize } from './normalize'
 export const pca = (array2D: number[][]) => {
   const pca = new PCA(array2D)
   const matrix = pca.predict(array2D)
-  const normalizedMatrix = normalize(matrix, 1)
+  const normalizedMatrix = normalize(matrix, 300)
   const newArray2D: number[][] = normalizedMatrix.to2DArray()
   return newArray2D
 }
