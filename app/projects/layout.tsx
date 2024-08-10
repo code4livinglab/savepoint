@@ -10,8 +10,8 @@ const ProjectLayout = ({
 }) => {
   return (
     <>
-      <AppBar />
       <ProjectList />
+      <AppBar />
       <SaveProjectButton />
       { children }
     </>

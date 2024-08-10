@@ -31,7 +31,7 @@ export const AppBar = () => {
         direction="row"
         spacing={3}
         sx={{ width: 480, margin: 3 }}
-        className="absolute items-center"
+        className="absolute top-0 left-0 items-center"
       >
         <Link href="/projects">
           <Typography variant="h5">savepoint</Typography>

@@ -17,7 +17,7 @@ export const MUIThemeProvider = ({
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Container disableGutters maxWidth={false}>
+      <Container disableGutters maxWidth={false} className="h-dvh">
         {children}
       </Container>
     </ThemeProvider>
