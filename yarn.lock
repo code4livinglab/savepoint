@@ -3083,7 +3083,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tweenjs/tween.js@npm:~23.1.1":
+"@tweenjs/tween.js@npm:~23.1.1, @tweenjs/tween.js@npm:~23.1.2":
   version: 23.1.3
   resolution: "@tweenjs/tween.js@npm:23.1.3"
   checksum: 10/10ecaf311c975162459bd016ef7eb1f3118a257050c4886de9737dee823fc829100a0887f3fc298f7a5577140eac054f9609b823eb0748ca7b653ec85ffba75e
@@ -3300,18 +3300,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.158.3":
-  version: 0.158.3
-  resolution: "@types/three@npm:0.158.3"
-  dependencies:
-    "@types/stats.js": "npm:*"
-    "@types/webxr": "npm:*"
-    fflate: "npm:~0.6.10"
-    meshoptimizer: "npm:~0.18.1"
-  checksum: 10/ee714f3e3727c4c9f9f48c611f5cb91bc5775b41158e2f3a518eff3119543579c333ae0cbd00e68ac43c659b593de5ee7256ce0399405601f37a1596b0e7169b
-  languageName: node
-  linkType: hard
-
 "@types/three@npm:^0.163.0":
   version: 0.163.0
   resolution: "@types/three@npm:0.163.0"
@@ -3322,6 +3310,19 @@ __metadata:
     fflate: "npm:~0.8.2"
     meshoptimizer: "npm:~0.18.1"
   checksum: 10/81320c03aa89b67601cdc7d0a0dca93cf1d59ff564214859f0f87d0314062e3b7cb02f6d15c245cdae6755d1febc54d23432c25df16ff4aac9c65ba2efd9973d
+  languageName: node
+  linkType: hard
+
+"@types/three@npm:^0.167.1":
+  version: 0.167.1
+  resolution: "@types/three@npm:0.167.1"
+  dependencies:
+    "@tweenjs/tween.js": "npm:~23.1.2"
+    "@types/stats.js": "npm:*"
+    "@types/webxr": "npm:*"
+    fflate: "npm:~0.8.2"
+    meshoptimizer: "npm:~0.18.1"
+  checksum: 10/e11cae99e9e4c2ae9c6f1a92d7a62a6d8d9f0b111133bcf8395d82a1da8d42cce94bec7c53b6c81a0e8f85d086377fa2cd854426dec72efce02c70150a2dc157
   languageName: node
   linkType: hard
 
@@ -5369,7 +5370,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fflate@npm:^0.6.9, fflate@npm:~0.6.10":
+"fflate@npm:^0.6.9":
   version: 0.6.10
   resolution: "fflate@npm:0.6.10"
   checksum: 10/9f2fd7224bccdb28102adc7c55c262b584571426eb9e0b91b13088884f45700232b51e034e300b74abf64e5449596d5c37d0a802673e25edb17c6742e4a4a0bd
@@ -7864,7 +7865,7 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
-    "@types/three": "npm:^0.158.3"
+    "@types/three": "npm:^0.167.1"
     ai: "npm:^3.3.0"
     autoprefixer: "npm:^10.0.1"
     aws-sdk: "npm:^2.1500.0"
