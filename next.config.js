@@ -18,7 +18,8 @@ const nextConfig = {
         permanent: true,
       },
     ]
-  }
+  },
+  transpilePackages: ['three'],
 }
 
 module.exports = nextConfig

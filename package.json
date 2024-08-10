@@ -20,6 +20,8 @@
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "@prisma/client": "^5.8.0",
+    "@react-three/drei": "^9.109.5",
+    "@react-three/fiber": "^8.16.8",
     "@tailwindcss/typography": "^0.5.10",
     "ai": "^3.3.0",
     "aws-sdk": "^2.1500.0",
@@ -42,7 +44,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-markdown": "^9.0.1",
-    "three": "^0.158.0",
+    "three": "^0.167.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
