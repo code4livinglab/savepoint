@@ -13,19 +13,28 @@ export const action = async (prevState: any, formData: FormData) => {
 
   // 検索テキストに該当するプロジェクトの一覧を取得
   const prisma = new PrismaClient()
-  const projectList: Project[] = await prisma.$queryRaw`
-  SELECT
-    id,
-    name,
-    description,
-    embedding::text,
-    created,
-    updated
-  FROM
-    public."Project"
-  WHERE
-    description LIKE ${'%' + query + '%'}
-  `
+  try {
+    const projectList: Project[] = await prisma.$queryRaw`
+SELECT
+  id,
+  name,
+  description,
+  embedding::text,
+  created,
+  updated
+FROM
+  public."Project"
+WHERE
+  description LIKE ${'%' + query + '%'}
+`
   
-  return projectList
+    return projectList
+
+  } catch (error) {
+    console.error({ error })
+    return []
+    
+  } finally {
+    await prisma.$disconnect() 
+  }
 }

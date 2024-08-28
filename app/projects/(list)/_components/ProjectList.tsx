@@ -5,9 +5,10 @@ import { loader } from "../loader";
 
 const ProjectList = async () => {
   const projects = await loader();
-  if (projects.length < 1) {
-    return <></>;
+  if (!projects) {
+    return null;
   }
+
   const embeddings = projects.map((project) => project.embedding);
   const newEmbeddings = pca(embeddings);
 
