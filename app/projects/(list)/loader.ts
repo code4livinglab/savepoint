@@ -1,27 +1,23 @@
-import { PrismaClient } from '@prisma/client'
-import { Project, ProjectRead } from "@/app/_types/project"
+// app/projects/(list)/loader.ts
+import { Project, ProjectRead } from "@/app/_types/project";
+import fs from 'fs';
+import path from 'path';
 
 export const loader = async () => {
-  // 検索テキストに該当するプロジェクトの一覧を取得
-  const prisma = new PrismaClient()
-  const projectReads: ProjectRead[] = await prisma.$queryRaw`
-SELECT
-  id,
-  name,
-  description,
-  embedding::text,
-  created,
-  updated
-FROM
-  public."Project"
-`
-      
-  // ベクトルの形式を変換
-  const projects: Project[] = projectReads.map((project) => {
-    const stringEmbedding = project.embedding.toString().replace(/[\[\]]/g, '').split(',')
-    const embedding = stringEmbedding.map((str) => parseFloat(str))
-    return { ...project, embedding }
-  })
+  // JSONファイルのパスを指定
+  const filePath = path.join(process.cwd(), 'projects.json'); // Adjust the path as needed
+  
+  // JSONファイルを読み込む
+  const jsonData = fs.readFileSync(filePath, 'utf-8');
+  const projectReads: ProjectRead[] = JSON.parse(jsonData);
 
-  return projects
+  // ベクトルの形式を変換
+  const projects: any = projectReads.map((project) => {
+    const stringEmbedding = project.embedding.toString().replace(/[\[\]]/g, '').split(',');
+    const embedding = stringEmbedding.map((str) => parseFloat(str));
+    return { ...project, embedding };
+  });
+
+  console.log(projects[0])
+  return projects;
 }

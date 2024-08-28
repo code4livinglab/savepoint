@@ -5,7 +5,7 @@ import { loader } from '../loader'
 
 const ProjectList = async () => {
   const projects = await loader()
-  const embeddings = projects.map((project) => project.embedding)
+  const embeddings = projects.map((project: any) => project.embedding)
   const newEmbeddings = pca(embeddings)
   const newProjects: Project[] = projects.map((project: any, i: number) => {
     project.embedding = newEmbeddings[i].slice(0, 3)
