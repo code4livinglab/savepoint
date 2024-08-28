@@ -1,10 +1,9 @@
-import { PrismaClient } from '@prisma/client'
 import { Project, ProjectRead } from "@/app/_types/project"
+import { prisma } from "@/app/prisma"
 
 export const loader = async () => {
-  // 検索テキストに該当するプロジェクトの一覧を取得
-  const prisma = new PrismaClient()
   try {
+    // 検索テキストに該当するプロジェクトの一覧を取得
     const projectReads: ProjectRead[] = await prisma.$queryRaw`
 SELECT
   id,
@@ -28,9 +27,6 @@ FROM
 
   } catch (error) {
     console.error({ error })
-    return null
-    
-  } finally {
-    await prisma.$disconnect() 
+    return null 
   }
 }

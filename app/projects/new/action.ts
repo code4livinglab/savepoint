@@ -1,22 +1,18 @@
 "use server";
 
-import { embed } from "ai";
-import pgvector from "pgvector";
-import { randomUUID } from "crypto";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { openai } from "@ai-sdk/openai";
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { fromCognitoIdentityPool } from "@aws-sdk/credential-providers";
-import { PrismaClient } from "@prisma/client";
-import {
-  generateFilesObjectAgent,
-  streamSummaryTextAgent,
-} from "./_agent/agents";
-import { documentsLoader, imagesLoader } from "./_agent/loader";
-import { auth } from "../../auth";
+import { embed } from 'ai'
+import pgvector from 'pgvector'
+import { randomUUID } from 'crypto'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { openai } from '@ai-sdk/openai'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
+import { prisma } from '@/app/prisma'
+import { generateFilesObjectAgent, streamSummaryTextAgent } from './_agent/agents'
+import { documentsLoader, imagesLoader } from './_agent/loader'
+import { auth } from '../../auth'
 
-const prisma = new PrismaClient();
 const s3Client = new S3Client({
   region: process.env.AWS_BUCKET_REGION,
   credentials: fromCognitoIdentityPool({
@@ -139,10 +135,8 @@ INSERT INTO
     console.log({ error });
     return {
       status: false,
-      message: "内部エラーが発生しました。開発者にお問合せください。",
-    };
-  } finally {
-    await prisma.$disconnect();
+      message: '内部エラーが発生しました。開発者にお問合せください。'
+    }
   }
 
   revalidatePath("/projects");
