@@ -63,8 +63,8 @@ const NewProjectForm = () => {
         <TextField
           key="reason4save" // textareaの再レンダリングを走らせ、defalutValueを更新する。
           id="outlined-multiline-flexible"
-          name="プロジェクトを保存するに至った経緯は何ですか？"
-          label="セーブした理由"
+          name="reason4save"
+          label="プロジェクトをセーブする理由"
           multiline
           minRows={5}
         />

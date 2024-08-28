@@ -79,7 +79,7 @@ export const saveAction = async (
 
 ${message}
 
-## このサイトにセーブした理由
+## プロジェクトをセーブした理由
 ${reason4save}
 `;
 
