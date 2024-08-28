@@ -130,8 +130,6 @@ INSERT INTO
       status: false,
       message: '内部エラーが発生しました。開発者にお問合せください。'
     }
-  } finally {
-    await prisma.$disconnect()
   }
 
   revalidatePath('/projects')

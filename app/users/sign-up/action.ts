@@ -72,7 +72,5 @@ export async function signUpAction(prevState: any, formData: FormData) {
       success: false,
       error: error.message || "予期せぬエラーが発生しました。",
     };
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -38,14 +38,12 @@ export const addRole = async (projectId:string) => {
     })
     
     revalidatePath(`/projects/${projectId}`)
+    return null
+
   } catch (error) {
     console.error('Error accepting NDA:', error)
     return null
-  }finally {
-    await prisma.$disconnect() 
   }
-  return null
-
 }
 
 // ファイルの取得
