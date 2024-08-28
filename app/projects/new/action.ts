@@ -77,10 +77,11 @@ export const saveAction = async (
     const id = randomUUID();
     const description = `# ${name}
 
-${message}
-
 ## プロジェクトをセーブした理由
+
 ${reason4save}
+
+${message}
 `;
 
     // エンべディング
