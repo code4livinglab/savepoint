@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/app/prisma'
 import { auth } from "../../auth"
-
-const prisma = new PrismaClient()
 
 export const getRole = async (projectId: string) => {
   // セッションの取得

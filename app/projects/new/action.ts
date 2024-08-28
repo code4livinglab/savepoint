@@ -8,12 +8,11 @@ import { redirect } from 'next/navigation'
 import { openai } from '@ai-sdk/openai'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/app/prisma'
 import { generateFilesObjectAgent, streamSummaryTextAgent } from './_agent/agents'
 import { documentsLoader, imagesLoader } from './_agent/loader'
 import { auth } from '../../auth'
 
-const prisma = new PrismaClient()
 const s3Client = new S3Client({
   region: process.env.AWS_BUCKET_REGION,
   credentials: fromCognitoIdentityPool({
