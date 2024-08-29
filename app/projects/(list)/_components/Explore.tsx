@@ -37,7 +37,10 @@ const Box = ({
       onClick={() => { router.push(`/projects/${project.id}`) }}
     >
       <sphereGeometry />
-      <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
+      <meshStandardMaterial
+        emissive={project.year == "2022" ? "skyblue" : "gold"}
+        emissiveIntensity={1}
+      />
       <Billboard>
         <Text
           fontSize={1}
