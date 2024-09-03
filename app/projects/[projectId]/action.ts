@@ -6,10 +6,10 @@ import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
 import { prisma } from '@/app/prisma'
 import { getSessionUserId } from './loader'
 
-const bucketName = process.env.AWS_BUCKET_NAME_RAW
-const bucketRegion = process.env.AWS_BUCKET_REGION
-const identityPoolId = process.env.AWS_IDENTITY_POOL_ID
-const transbucket = process.env.AWS_BUCKET_NAME_TRANSFORMED
+const bucketName = process.env.BUCKET_NAME_RAW
+const bucketRegion = process.env.BUCKET_REGION
+const identityPoolId = process.env.IDENTITY_POOL_ID
+const transbucket = process.env.BUCKET_NAME_TRANSFORMED
 const projectsKey = 'projects/'
 
 const client = new S3Client({
