@@ -14,10 +14,10 @@ import { documentsLoader, imagesLoader } from './_agent/loader'
 import { auth } from '../../auth'
 
 const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.BUCKET_REGION,
   credentials: fromCognitoIdentityPool({
-    clientConfig: { region: process.env.AWS_BUCKET_REGION },
-    identityPoolId: process.env.AWS_IDENTITY_POOL_ID as string,
+    clientConfig: { region: process.env.BUCKET_REGION },
+    identityPoolId: process.env.IDENTITY_POOL_ID as string,
   }),
 });
 
