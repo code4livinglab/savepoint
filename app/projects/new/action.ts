@@ -125,7 +125,7 @@ INSERT INTO
       const fileKey = `${dirKey}${file.name}`;
       await s3Client.send(
         new PutObjectCommand({
-          Bucket: process.env.AWS_BUCKET_NAME_RAW,
+          Bucket: process.env.BUCKET_NAME_RAW,
           Key: fileKey,
           Body: Buffer.from(fileBuffer),
         })
