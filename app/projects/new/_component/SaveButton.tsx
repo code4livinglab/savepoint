@@ -10,9 +10,9 @@ const SaveButton = () => {
       name="status"
       value="save"
       variant="contained"
-      disabled={pending}
+      disabled={true}
     >
-      保存する
+      保存する(現在は概要生成まで可能)
     </Button>
   )
 }

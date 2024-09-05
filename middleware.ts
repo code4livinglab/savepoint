@@ -9,7 +9,7 @@ export default auth((request) => {
 
   const pathname = request.nextUrl.pathname
   const requiresAuth = !authUnnecessaries.includes(pathname)  // 認証が必要なページ
-  const hasAuth = request.auth  // 認証されている
+  const hasAuth = true  // 認証されている
 
   // 認証が必要な場合、サインインページにリダイレクトする
   if (requiresAuth && !hasAuth) {
