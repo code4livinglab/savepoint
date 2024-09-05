@@ -3,8 +3,7 @@ import { JWT } from "next-auth/jwt"
 import Credentials from "next-auth/providers/credentials"
 import { compare } from 'bcryptjs'
 import { object, string, ZodError } from "zod"
-
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/app/prisma'
  
 export const signInSchema = object({
   email: string({ required_error: "Email is required" })
@@ -43,7 +42,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { email, password } = await signInSchema.parseAsync(credentials)
 
           // ユーザー取得
-          const prisma = new PrismaClient();
           const user = await prisma.user.findUnique({
             where: { email },
           })

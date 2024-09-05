@@ -1,7 +1,7 @@
 'use server'
 
-import { PrismaClient } from '@prisma/client'
 import { Project } from '@/app/_types/project'
+import { prisma } from '@/app/prisma'
 
 export const action = async (prevState: any, formData: FormData) => {
   const query = formData.get('query')?.toString() ?? ''
@@ -11,21 +11,26 @@ export const action = async (prevState: any, formData: FormData) => {
     return []
   }
 
-  // 検索テキストに該当するプロジェクトの一覧を取得
-  const prisma = new PrismaClient()
-  const projectList: Project[] = await prisma.$queryRaw`
-  SELECT
-    id,
-    name,
-    description,
-    embedding::text,
-    created,
-    updated
-  FROM
-    public."Project"
-  WHERE
-    description LIKE ${'%' + query + '%'}
-  `
+  try {
+    // 検索テキストに該当するプロジェクトの一覧を取得
+    const projectList: Project[] = await prisma.$queryRaw`
+SELECT
+  id,
+  name,
+  description,
+  embedding::text,
+  created,
+  updated
+FROM
+  public."Project"
+WHERE
+  description LIKE ${'%' + query + '%'}
+`
   
-  return projectList
+    return projectList
+
+  } catch (error) {
+    console.error({ error })
+    return [] 
+  }
 }

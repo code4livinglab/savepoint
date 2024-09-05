@@ -1,4 +1,3 @@
-// app/projects/(list)/loader.ts
 import { Project, ProjectRead } from "@/app/_types/project";
 import fs from 'fs';
 import path from 'path';

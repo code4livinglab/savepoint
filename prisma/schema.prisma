@@ -1,6 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions", "fullTextSearch"]
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]  // Caveats when deploying to AWS platforms
 }
 
 datasource db {
