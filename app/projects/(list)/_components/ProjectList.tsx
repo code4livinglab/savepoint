@@ -12,7 +12,7 @@ const ProjectList = async () => {
   const embeddings = projects.map((project: any) => project.embedding);
   const newEmbeddings = pca(embeddings);
 
-  const newProjects: Project[] = projects.map((project: any, i: number) => {
+  const newProjects = projects.map((project: any, i: number) => {
     project.embedding = newEmbeddings[i].slice(0, 3);
     return project;
   });

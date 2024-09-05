@@ -24,7 +24,7 @@ import * as THREE from 'three'
 const Box = ({
   project,
 }: {
-  project: Project,
+  project: any,
 }) => {
   const meshRef = useRef<THREE.Mesh>()
   const router = useRouter()
@@ -59,7 +59,7 @@ const Explore = ({
   // @ts-ignore
   projects,
 }: {
-  prjects: Project[],
+  projects: any,
 }) => {
   return (
     <>
