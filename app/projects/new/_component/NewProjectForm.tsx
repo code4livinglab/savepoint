@@ -76,7 +76,7 @@ const NewProjectForm = () => {
             startIcon={<CloudUploadIcon />}
             className="grow"
           >
-            <span>ファイルをアップロードする</span>
+            <span>フォルダをアップロードする</span>
             <input
               type="file"
               name="files"
