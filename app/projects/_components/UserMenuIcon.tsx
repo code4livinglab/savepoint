@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  Logout,
-  BugReport
-} from '@mui/icons-material'
+import { Logout } from '@mui/icons-material'
 import {
   Avatar,
   ListItemIcon,
@@ -20,9 +17,6 @@ export const UserMenuIcon = () => {
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
-  }
-  const handleBugReportOpen = () => {
-    window.open("https://forms.gle/6HvsbWgVbxgA1at39")
   }
 
   const handleClose = () => { setAnchorEl(null) }
@@ -51,15 +45,6 @@ export const UserMenuIcon = () => {
           ログアウトする
         </MenuItem>
       </Menu>
-      <IconButton
-        size="large"
-        edge="end"
-        color="inherit"
-        onClick={handleBugReportOpen}
-        sx={{ width: 56, height: 56, margin: 0 }}
-      >
-        <BugReport />
-      </IconButton>
     </>
   )
 }
