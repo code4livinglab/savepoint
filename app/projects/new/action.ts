@@ -14,10 +14,10 @@ import { documentsLoader, imagesLoader } from './_agent/loader'
 import { auth } from '../../auth'
 
 const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION,
+  region: process.env.BUCKET_REGION,
   credentials: fromCognitoIdentityPool({
-    clientConfig: { region: process.env.AWS_BUCKET_REGION },
-    identityPoolId: process.env.AWS_IDENTITY_POOL_ID as string,
+    clientConfig: { region: process.env.BUCKET_REGION },
+    identityPoolId: process.env.IDENTITY_POOL_ID as string,
   }),
 });
 
@@ -125,7 +125,7 @@ INSERT INTO
       const fileKey = `${dirKey}${file.name}`;
       await s3Client.send(
         new PutObjectCommand({
-          Bucket: process.env.AWS_BUCKET_NAME_RAW,
+          Bucket: process.env.BUCKET_NAME_RAW,
           Key: fileKey,
           Body: Buffer.from(fileBuffer),
         })
