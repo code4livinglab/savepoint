@@ -89,7 +89,7 @@ const NewProjectForm = () => {
         </ButtonGroup>
         <Typography variant="caption">
           {
-            "※ 以下で送信いただいた内容は(株)会津の暮らし研究室が行うSAVEPOINT実装に向けた実証実験等に活用されます。\
+            "※ 以下で送信いただいた内容はCode for Living Lab.が行うSAVEPOINT実装に向けた実証実験等に活用されます。\
 クライアント名などの固有名詞や、個人を特定できる内容は記載しないようお願いいたします。"
           }
         </Typography>
