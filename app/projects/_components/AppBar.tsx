@@ -1,6 +1,7 @@
 'use client'
 
-import { Box, Stack, Typography } from '@mui/material'
+import { BugReport } from '@mui/icons-material'
+import { Box, IconButton, Stack, Typography } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useFormState } from 'react-dom'
@@ -25,6 +26,10 @@ export const AppBar = () => {
     setDisplayList(false)
   }
 
+  const handleBugReportOpen = () => {
+    window.open('https://forms.gle/uUKaFR56QQSgaNPz7')
+  }
+
   return (
     <>
       <Stack
@@ -44,7 +49,19 @@ export const AppBar = () => {
           onClose={handleClose}
         />
       )}
+      {/* Report Bugs */}
       <Box sx={{ margin: 3 }} className="absolute top-0 right-0">
+        <IconButton
+          size="large"
+          edge="end"
+          color="inherit"
+          onClick={handleBugReportOpen}
+          sx={{ width: 56, height: 56, margin: 0 }}
+        >
+          <BugReport />
+        </IconButton>
+
+        {/* User Menu */}
         <UserMenuIcon />
       </Box>
     </>
