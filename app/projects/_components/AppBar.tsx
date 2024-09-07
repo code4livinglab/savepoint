@@ -27,7 +27,7 @@ export const AppBar = () => {
   }
 
   const handleBugReportOpen = () => {
-    window.open(process.env.BUG_REPORT_URL)
+    window.open('https://forms.gle/uUKaFR56QQSgaNPz7')
   }
 
   return (
