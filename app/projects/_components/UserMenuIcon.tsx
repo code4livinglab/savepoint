@@ -1,6 +1,9 @@
 'use client'
 
-import { Logout } from '@mui/icons-material'
+import {
+  Logout,
+  FormatListBulleted
+} from '@mui/icons-material'
 import {
   Avatar,
   ListItemIcon,
@@ -8,12 +11,14 @@ import {
   MenuItem,
   Menu,
 } from '@mui/material'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { signOutAction } from '../actions'
 
 export const UserMenuIcon = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const isOpen = Boolean(anchorEl)
+  const router = useRouter()
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -21,6 +26,8 @@ export const UserMenuIcon = () => {
 
   const handleClose = () => { setAnchorEl(null) }
   const handleSignOut = async () => { await signOutAction() }
+
+  const moveToMyProjectList = () => { router.push('/mypage/projects') }
 
   return (
     <>
@@ -38,6 +45,12 @@ export const UserMenuIcon = () => {
         open={isOpen}
         onClose={handleClose}
       >
+        <MenuItem onClick={moveToMyProjectList}>
+          <ListItemIcon>
+            <FormatListBulleted fontSize="small" />
+          </ListItemIcon>
+          プロジェクト一覧
+        </MenuItem>
         <MenuItem onClick={handleSignOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
