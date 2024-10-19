@@ -60,3 +60,23 @@ WHERE
     return []
   }
 }
+
+export const similarProjectsLoader = async (project: any, limit: number) => {
+  const similarProjects = await prisma.$queryRaw`
+SELECT
+  id,
+  name,
+  description,
+  1 - (embedding <=> ${project.embedding}::vector) AS similarity
+FROM
+  public."Project"
+WHERE
+  id != ${project.id}
+ORDER BY
+  similarity DESC
+LIMIT
+  ${limit}
+`
+
+  return similarProjects
+}

@@ -68,10 +68,9 @@ export const saveAction = async (
     };
   }
 
-  try {
-    // ペイロード
-    const id = randomUUID();
-    const description = `# ${name}
+  // ペイロード
+  const id = randomUUID();
+  const description = `# ${name}
 
 ## プロジェクトをセーブした理由
 
@@ -79,6 +78,8 @@ ${reason4save}
 
 ${message}
 `;
+
+  try {
 
     // エンべディング
     const { embedding } = await embed({
@@ -140,5 +141,5 @@ INSERT INTO
   }
 
   revalidatePath("/projects");
-  redirect("/projects");
+  redirect(`/projects/${id}`);
 };
