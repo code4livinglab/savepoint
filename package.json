@@ -1,6 +1,6 @@
 {
-  "name": "nextjs",
-  "version": "0.1.0",
+  "name": "savepoint",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,6 +20,8 @@
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
     "@prisma/client": "^5.8.0",
+    "@react-three/drei": "^9.109.5",
+    "@react-three/fiber": "^8.16.8",
     "@tailwindcss/typography": "^0.5.10",
     "ai": "^3.3.0",
     "aws-sdk": "^2.1500.0",
@@ -31,7 +33,7 @@
     "langsmith": "^0.1.40",
     "mammoth": "^1.8.0",
     "ml-pca": "^4.1.1",
-    "next": "14.0.3",
+    "next": "^14.0.1",
     "next-auth": "^5.0.0-beta.19",
     "officeparser": "^4.1.1",
     "pdf-parse": "^1.1.1",
@@ -42,7 +44,7 @@
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
     "react-markdown": "^9.0.1",
-    "three": "^0.158.0",
+    "three": "^0.167.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -53,7 +55,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/three": "^0.158.3",
+    "@types/three": "^0.167.1",
     "autoprefixer": "^10.0.1",
     "cors": "^2.8.5",
     "eslint": "^8",

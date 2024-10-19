@@ -13,11 +13,14 @@ const ProjectList = async () => {
   const newEmbeddings = pca(embeddings);
 
   const newProjects: Project[] = projects.map((project: any, i: number) => {
-    project.embedding = newEmbeddings[i].slice(0, 3);
-    return project;
-  });
-
-  return <Explore projects={newProjects} />;
-};
+    project.embedding = newEmbeddings[i].slice(0, 3)
+    return project
+  })
+  
+  return (
+    // @ts-ignore
+    <Explore projects={newProjects} />
+  )
+}
 
 export default ProjectList;
