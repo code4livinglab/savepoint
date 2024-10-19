@@ -1,13 +1,12 @@
 import {
   Paper,
   Stack,
-  TextField,
 } from '@mui/material'
 // import { File } from '@/app/_types/file'
 import { Project } from '@/app/_types/project'
 import { DownloadButton } from './DownloadButton'
 import { MarkdownViewer } from './MarkdownViewer'
-import { CloseButton } from '../../_components/CloseButton';
+import { CloseButton } from '../../_components/CloseButton'
 
 export const ProjectDetails = ({
   project,
