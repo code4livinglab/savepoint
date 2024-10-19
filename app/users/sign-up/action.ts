@@ -1,8 +1,8 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import { hash } from "bcryptjs";
 import { signIn } from "@/app/auth";
+import { prisma } from '@/app/prisma'
 
 export async function signUpAction(prevState: any, formData: FormData) {
   // フォームの取得
@@ -27,8 +27,6 @@ export async function signUpAction(prevState: any, formData: FormData) {
       error: "パスワードは8文字以上で設定してください。",
     };
   }
-
-  const prisma = new PrismaClient();
 
   try {
     // 既存のユーザーチェック
@@ -74,7 +72,5 @@ export async function signUpAction(prevState: any, formData: FormData) {
       success: false,
       error: error.message || "予期せぬエラーが発生しました。",
     };
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '@/app/prisma'
 import { auth } from "../../auth"
-
-const prisma = new PrismaClient()
 
 export const getRole = async (projectId: string) => {
   // セッションの取得
@@ -30,8 +28,6 @@ export const getRole = async (projectId: string) => {
   } catch (error) {
     console.error('Error retrieving user role:', error)
     return null
-  } finally {
-    await prisma.$disconnect()
   }
 }
 
@@ -62,7 +58,5 @@ WHERE
   } catch (error) {
     console.error('Error loading project:', error)
     return []
-  } finally {
-    await prisma.$disconnect()
   }
 }
