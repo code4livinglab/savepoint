@@ -22,6 +22,7 @@
     "@prisma/client": "^5.8.0",
     "@react-three/drei": "^9.109.5",
     "@react-three/fiber": "^8.16.8",
+    "@supabase/supabase-js": "^2.45.5",
     "@tailwindcss/typography": "^0.5.10",
     "ai": "^3.3.0",
     "aws-sdk": "^2.1500.0",
