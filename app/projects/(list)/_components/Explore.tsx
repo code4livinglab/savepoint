@@ -1,47 +1,56 @@
-'use client'
+"use client";
 
-import { Project } from '@/app/_types/project'
+import { Project } from "@/app/_types/project";
 import {
   ArcballControls,
   Billboard,
   GizmoHelper,
   GizmoViewport,
-  Instances,
-  Loader,
-  QuadraticBezierLine,
-  ScreenSizer,
-  SoftShadows,
   Stars,
-  Shadow,
   Text,
-  KeyboardControls,
-} from '@react-three/drei'
-import { Canvas, Vector3 } from '@react-three/fiber'
-import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
-import * as THREE from 'three'
+  PerspectiveCamera,
+} from "@react-three/drei";
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
+import { useRouter, useParams, usePathname } from "next/navigation";
+import { useRef, useState, useCallback, useEffect } from "react";
+import * as THREE from "three";
 
 const Box = ({
   project,
+  onSelect,
 }: {
-  project: Project,
+  project: Project;
+  onSelect: (project: Project) => void;
 }) => {
-  const meshRef = useRef<THREE.Mesh>()
-  const router = useRouter()
+  const meshRef = useRef<THREE.Mesh>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const projectId = pathname.split("/").pop();
+    if (
+      projectId &&
+      typeof projectId === "string" &&
+      projectId === project.id
+    ) {
+      onSelect(project);
+    }
+  }, [router, pathname, project, onSelect]);
 
   return (
     <mesh
-      position={project.embedding as Vector3}
-      // @ts-ignore
+      position={new THREE.Vector3(...project.embedding)}
       ref={meshRef}
-      onClick={() => { router.push(`/projects/${project.id}`) }}
+      onClick={() => {
+        router.push(`/projects/${project.id}`);
+      }}
     >
-      <sphereGeometry />
+      <sphereGeometry args={[0.5]} />
       <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
       <Billboard>
         <Text
-          fontSize={1}
-          maxWidth={12}
+          fontSize={0.5}
+          maxWidth={6}
           anchorY="top"
           overflowWrap="break-word"
         >
@@ -49,30 +58,117 @@ const Box = ({
         </Text>
       </Billboard>
     </mesh>
-  )
-}
+  );
+};
 
-const Explore = ({
-  // @ts-ignore
-  projects,
+const CameraController = ({
+  target,
+  isMoving,
+  onMoveComplete,
 }: {
-  prjects: Project[],
+  target: THREE.Vector3 | null;
+  isMoving: boolean;
+  onMoveComplete: () => void;
 }) => {
-  return (
-    <>
-      <Canvas>
-        <ArcballControls makeDefault />
-        <GizmoHelper alignment="bottom-left">
-          <GizmoViewport />
-        </GizmoHelper>
-        <Stars />
-        {/* @ts-ignore */}
-        {projects.map((project, i) => (
-          <Box key={i} project={project} />
-        ))}
-      </Canvas>
-    </>
-  )
-}
+  const { camera, size } = useThree();
+  const moveProgress = useRef(0);
+  const startPosition = useRef(new THREE.Vector3());
+  const startRotation = useRef(new THREE.Quaternion());
 
-export default Explore
+  useEffect(() => {
+    if (isMoving && target) {
+      startPosition.current.copy(camera.position);
+      startRotation.current.copy(camera.quaternion);
+      moveProgress.current = 0;
+    }
+  }, [isMoving, target]);
+
+  useFrame(() => {
+    if (target && isMoving) {
+      const offsetX = 0;
+      const offsetY = 0;
+      const offsetZ = 0;
+      const targetPosition = new THREE.Vector3(
+        target.x + offsetX,
+        target.y + offsetY,
+        target.z + offsetZ
+      );
+
+      moveProgress.current += 0.02; // 移動速度の調整
+
+      if (moveProgress.current >= 1) {
+        camera.position.copy(targetPosition);
+        camera.lookAt(target);
+        onMoveComplete();
+      } else {
+        camera.position.lerpVectors(
+          startPosition.current,
+          targetPosition,
+          moveProgress.current
+        );
+        camera.quaternion.slerpQuaternions(
+          startRotation.current,
+          new THREE.Quaternion().setFromRotationMatrix(
+            new THREE.Matrix4().lookAt(targetPosition, target, camera.up)
+          ),
+          moveProgress.current
+        );
+      }
+    }
+  });
+
+  return null;
+};
+
+const Explore = ({ projects }: { projects: Project[] }) => {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isMoving, setIsMoving] = useState(false);
+  const params = useParams();
+
+  const handleSelectProject = useCallback((project: Project) => {
+    setSelectedProject(project);
+    setIsMoving(true);
+  }, []);
+
+  const handleMoveComplete = useCallback(() => {
+    setIsMoving(false);
+  }, []);
+
+  useEffect(() => {
+    const projectId = params?.id;
+    if (projectId && typeof projectId === "string") {
+      const project = projects.find((p) => p.id === projectId);
+      if (project) {
+        setSelectedProject(project);
+        setIsMoving(true);
+      }
+    }
+  }, [params, projects]);
+
+  return (
+    <Canvas>
+      <PerspectiveCamera makeDefault position={[0, 0, 50]} />
+      <ArcballControls makeDefault enabled={!isMoving} />
+      <GizmoHelper alignment="bottom-left">
+        <GizmoViewport />
+      </GizmoHelper>
+      <Stars />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
+      <CameraController
+        target={
+          selectedProject
+            ? new THREE.Vector3(...selectedProject.embedding)
+            : null
+        }
+        isMoving={isMoving}
+        onMoveComplete={handleMoveComplete}
+      />
+      {projects.map((project, i) => (
+        <Box key={i} project={project} onSelect={handleSelectProject} />
+      ))}
+    </Canvas>
+  );
+};
+
+export default Explore;

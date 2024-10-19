@@ -8,11 +8,7 @@ import { DownloadButton } from './DownloadButton'
 import { MarkdownViewer } from './MarkdownViewer'
 import { CloseButton } from '../../_components/CloseButton'
 
-export const ProjectDetails = ({
-  project,
-}: {
-  project: Project,
-}) => {
+export const ProjectDetails = ({ project }: { project: Project }) => {
   return (
     <Paper
       elevation={3}
@@ -38,21 +34,21 @@ export const ProjectDetails = ({
         <CloseButton />
       </Stack>
     </Paper>
-  )
-}
+  );
+};
 
 const viewProjectFile = async (projectId: string, fileName: string) => {
   try {
     const response = await fetch(`/api/${projectId}/files/${fileName}`);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
     const data = await response.json();
     const href = data.url;
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = href;
-    a.target = '_blank';
+    a.target = "_blank";
     document.body.appendChild(a);
     a.click();
     a.remove();
