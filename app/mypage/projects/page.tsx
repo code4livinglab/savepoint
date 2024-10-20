@@ -1,5 +1,17 @@
-const MyProjectListPage = async () => {
-  return null
-}
+import React from "react";
+import { AppBar } from "../../projects/_components/AppBar";
+import UserProjectList from "./UserProjectList";
+import { Box } from "@mui/material";
 
-export default MyProjectListPage
+const MyProjectListPage = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <>
+      <AppBar />
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <UserProjectList />
+      </Box>
+    </>
+  );
+};
+
+export default MyProjectListPage;

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Project } from "@/app/_types/project";
 import {
   Card,
@@ -10,61 +10,93 @@ import {
   DialogActions,
   Button,
   Box,
+  TextField,
   IconButton,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { updateProjectAction } from "../actions";
 
-const ProjectCard = ({ project }: { project: Project }) => {
+const ProjectCard = ({ project }) => {
   const [open, setOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleCardClick = (project: Project) => {
-    setSelectedProject(project);
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      name: project.name,
+      description: project.description,
+    },
+  });
+
+  const handleCardClick = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedProject(null);
+    setIsEditing(false);
+    reset();
   };
 
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
 
-  // Parse the created date once
+  const onSubmit = async (data) => {
+    const result = await updateProjectAction(project.id, data);
+    if (result.success) {
+      setIsEditing(false);
+      // プロジェクトデータの更新処理をここに追加
+    } else {
+      console.error(result.error);
+    }
+  };
+
   const createdDate = new Date(project.created).toLocaleString();
   const updatedDate = new Date(project.updated).toLocaleString();
 
   return (
     <>
-      <Card key={project.id} sx={{ mb: 2, borderRadius: 3, display: 'flex' }} style={{ backgroundColor: "white" }}>
-        <div onClick={() => handleCardClick(project)} style={{ cursor: "pointer" }}>
-          <CardContent>
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{ color: "black", fontWeight: "bold", my: 1 }}
-            >
-              {project.name}
-            </Typography>
-            <Typography
-              color="text.secondary"
-              gutterBottom
-              sx={{ color: "gray", my: 1 }}
-            >
-              {createdDate}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ color: "black", mb: 1 }}
-            >
-              {project.description.substring(0, 50)}...
-            </Typography>
-          </CardContent>
-        </div>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, px: 2, pb: 2 }}>
+      <Card
+        sx={{
+          mb: 2,
+          borderRadius: 3,
+          display: "flex",
+          flexDirection: "column",
+          cursor: "pointer",
+        }}
+        style={{ backgroundColor: "white" }}
+        onClick={handleCardClick}
+      >
+        <CardContent>
+          <Typography
+            variant="h5"
+            component="div"
+            sx={{ color: "black", fontWeight: "bold", my: 1 }}
+          >
+            {project.name}
+          </Typography>
+          <Typography
+            color="text.secondary"
+            gutterBottom
+            sx={{ color: "gray", my: 1 }}
+          >
+            {createdDate}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ color: "black", mb: 1 }}
+          >
+            {project.description.substring(0, 50)}...
+          </Typography>
+        </CardContent>
+        <Box
+          sx={{ display: "flex", alignItems: "center", gap: 2, px: 2, pb: 2 }}
+        >
           <SaveAltIcon sx={{ color: "gray" }} />
           <Typography sx={{ color: "gray" }}>999</Typography>
           <FavoriteBorderIcon sx={{ color: "pink" }} />
@@ -80,53 +112,170 @@ const ProjectCard = ({ project }: { project: Project }) => {
         PaperProps={{
           style: {
             backgroundColor: "white",
-            borderRadius: 15
+            borderRadius: 15,
           },
         }}
       >
-        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} style={{ color: "black", my: 2 }} fontWeight="bold">
+        <DialogTitle
+          sx={{
+            m: 0,
+            p: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+          style={{ color: "black", my: 2 }}
+          fontWeight="bold"
+        >
           {project?.name}
-          <IconButton aria-label="close" onClick={handleClose} style={{ color: "black" }}>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            style={{ color: "black" }}
+          >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Typography variant="subtitle1" fontWeight="bold" gutterBottom style={{ color: "gray", my: 2 }}>
-            タイトル
-          </Typography>
-          <Typography variant="body1" gutterBottom style={{ color: "black", my: 2 }}>
-            {project?.name}
-          </Typography>
+          {isEditing ? (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Typography
+                style={{ color: "gray", my: 2 }}
+                variant="subtitle1"
+                fontWeight="bold"
+                gutterBottom
+              >
+                タイトル
+              </Typography>
+              <TextField
+                {...register("name", { required: true })}
+                fullWidth
+                defaultValue={project.name}
+                style={{ color: "black" }}
+              />
 
-          <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ mt: 2 }} style={{ color: "gray", my: 2 }}>
-            概要
-          </Typography>
-          <Typography variant="body2" gutterBottom style={{ color: "black", my: 2 }}>
-            {project?.description}
-          </Typography>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ mt: 2 }}
+                style={{ color: "gray" }}
+              >
+                概要
+              </Typography>
+              <TextField
+                {...register("description", { required: true })}
+                fullWidth
+                multiline
+                rows={4}
+                defaultValue={project.description}
+                style={{ color: "black" }}
+              />
 
-          <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ mt: 2 }} style={{ color: "gray", my: 2 }}>
-            作成日
-          </Typography>
-          <Typography variant="body2" gutterBottom style={{ color: "black", my: 2 }}>
-            {createdDate}
-          </Typography>
+              <Box sx={{ mt: 3, display: "flex", gap: 1 }}>
+                <Button type="submit" variant="contained" color="primary">
+                  保存
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setIsEditing(false)}
+                >
+                  キャンセル
+                </Button>
+              </Box>
+            </form>
+          ) : (
+            <>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                gutterBottom
+                style={{ color: "gray", my: 2 }}
+              >
+                タイトル
+              </Typography>
+              <Typography
+                variant="body1"
+                gutterBottom
+                style={{ color: "black", my: 2 }}
+              >
+                {project?.name}
+              </Typography>
 
-          <Typography variant="subtitle1" fontWeight="bold" gutterBottom sx={{ mt: 2 }} style={{ color: "gray", my: 2 }}>
-            更新日
-          </Typography>
-          <Typography variant="body2" gutterBottom style={{ color: "black", my: 2 }}>
-            {updatedDate}
-          </Typography>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ mt: 2 }}
+                style={{ color: "gray", my: 2 }}
+              >
+                概要
+              </Typography>
+              <Typography
+                variant="body2"
+                gutterBottom
+                style={{ color: "black", my: 2 }}
+              >
+                {project?.description}
+              </Typography>
 
-          <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Button variant="outlined" fullWidth color="primary">
-              編集する
-            </Button>
-            <Button variant="text" fullWidth color="error">
-              削除する
-            </Button>
-          </Box>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ mt: 2 }}
+                style={{ color: "gray", my: 2 }}
+              >
+                作成日
+              </Typography>
+              <Typography
+                variant="body2"
+                gutterBottom
+                style={{ color: "black", my: 2 }}
+              >
+                {createdDate}
+              </Typography>
+
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ mt: 2 }}
+                style={{ color: "gray", my: 2 }}
+              >
+                更新日
+              </Typography>
+              <Typography
+                variant="body2"
+                gutterBottom
+                style={{ color: "black", my: 2 }}
+              >
+                {updatedDate}
+              </Typography>
+
+              <Box
+                sx={{
+                  mt: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1,
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  color="primary"
+                  onClick={handleEditClick}
+                >
+                  編集する
+                </Button>
+                <Button variant="text" fullWidth color="error">
+                  削除する
+                </Button>
+              </Box>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>

@@ -3,7 +3,6 @@ import { auth } from "../../auth";
 
 export const getSessionUserId = async () => {
   const session = await auth();
-  console.log(session);
 
   if (!session?.user?.id) return null;
 
@@ -16,20 +15,21 @@ export const loader = async () => {
     // ユーザーと紐づくプロジェクトIDを取得
     const projectUsers = await prisma.projectUser.findMany({
       where: {
-        userId: userId as string
+        userId: userId as string,
       },
     });
 
     // プロジェクトIDからプロジェクト一覧を取得
-    const userProjects = await Promise.all(projectUsers.map((projectUser) => {
-      return prisma.project.findUnique({
-        where: {
-          id: projectUser.projectId
-        }
-      });
-    }));
+    const userProjects = await Promise.all(
+      projectUsers.map((projectUser) => {
+        return prisma.project.findUnique({
+          where: {
+            id: projectUser.projectId,
+          },
+        });
+      })
+    );
 
-    console.log(userProjects);
     return userProjects;
   } catch (error) {
     console.error("Error loading project:", error);
