@@ -3,7 +3,6 @@ import { auth } from "../../auth";
 
 export const getSessionUserId = async () => {
   const session = await auth();
-  console.log(session);
 
   if (!session?.user?.id) return null;
 
