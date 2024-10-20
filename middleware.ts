@@ -2,11 +2,7 @@ import { auth } from "@/app/auth";
 
 export default auth((request) => {
   // 認証が不要なページ
-  const authUnnecessaries = [
-    "/users/sign-in",
-    "/users/sign-up",
-    "/mypage/profile",
-  ];
+  const authUnnecessaries = ["/users/sign-in", "/users/sign-up"];
 
   const pathname = request.nextUrl.pathname;
   const requiresAuth = !authUnnecessaries.includes(pathname); // 認証が必要なページ
