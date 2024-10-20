@@ -10,15 +10,12 @@ export const getSessionUserId = async () => {
   return session.user.id;
 };
 
-export const loader = async () => {
+export const userInfoLoader = async () => {
   try {
     const userId = await getSessionUserId();
-    console.log(userId);
-    // prismaのuserでuserIdが一致するものの情報を取得
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
-    console.log(user);
     return user;
   } catch (error) {
     console.error("Error loading project:", error);

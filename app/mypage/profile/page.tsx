@@ -1,14 +1,11 @@
-import { loader, similarProjectsLoader } from "./loader";
+import { userInfoLoader } from "./loader";
+import UserProfile from "./_component/profile";
 
 const ProjectDetailsPage = async () => {
-  // console.log(similarProjects);
-  const userInfo = await loader();
-  // console.log(userInfo);
+  const userInfo = await userInfoLoader();
   return (
     <>
-      <div>{userInfo.id}</div>
-      <div>{userInfo.name}</div>
-      <div>{userInfo.email}</div>
+      <UserProfile profile={userInfo}></UserProfile>
     </>
   );
 };
