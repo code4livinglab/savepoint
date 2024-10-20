@@ -1,26 +1,40 @@
-'use client'
+"use client";
 
-import { Logout } from '@mui/icons-material'
+import { Logout, FormatListBulleted } from "@mui/icons-material";
 import {
   Avatar,
   ListItemIcon,
   IconButton,
   MenuItem,
   Menu,
-} from '@mui/material'
-import { useState } from 'react'
-import { signOutAction } from '../actions'
+} from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { signOutAction } from "../actions";
 
 export const UserMenuIcon = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const isOpen = Boolean(anchorEl)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isOpen = Boolean(anchorEl);
+  const router = useRouter();
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
+    setAnchorEl(event.currentTarget);
+  };
 
-  const handleClose = () => { setAnchorEl(null) }
-  const handleSignOut = async () => { await signOutAction() }
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleSignOut = async () => {
+    await signOutAction();
+  };
+
+  const moveToMyProjectList = () => {
+    router.push("/mypage/projects");
+  };
+
+  const moveToMypageProfile = () => {
+    router.push("/mypage/profile");
+  };
 
   return (
     <>
@@ -33,11 +47,19 @@ export const UserMenuIcon = () => {
       >
         <Avatar />
       </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={isOpen}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={isOpen} onClose={handleClose}>
+        <MenuItem onClick={moveToMypageProfile}>
+          <ListItemIcon>
+            <FormatListBulleted fontSize="small" />
+          </ListItemIcon>
+          プロフィール編集
+        </MenuItem>
+        <MenuItem onClick={moveToMyProjectList}>
+          <ListItemIcon>
+            <FormatListBulleted fontSize="small" />
+          </ListItemIcon>
+          プロジェクト一覧
+        </MenuItem>
         <MenuItem onClick={handleSignOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -46,5 +68,5 @@ export const UserMenuIcon = () => {
         </MenuItem>
       </Menu>
     </>
-  )
-}
+  );
+};
