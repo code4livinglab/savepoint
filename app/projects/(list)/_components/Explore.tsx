@@ -81,7 +81,7 @@ const CameraController = ({
       startRotation.current.copy(camera.quaternion);
       moveProgress.current = 0;
     }
-  }, [isMoving, target]);
+  }, [isMoving, target, camera.position, camera.quaternion]);
 
   useFrame(() => {
     if (target && isMoving) {
