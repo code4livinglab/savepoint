@@ -6,6 +6,7 @@ import { LinearProgress, Typography, Box } from "@mui/material";
 export default function Loading() {
   return (
     <Box
+      className="bg-black"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -13,12 +14,9 @@ export default function Loading() {
         justifyContent: "center",
         height: "100vh",
       }}
-      className="bg-black"
     >
-      <Typography variant="h5" className="text-white">
-        Welcome to SAVEPOINT
-      </Typography>
-      <LinearProgress className="w-1/3 m-20" />
+      <Typography variant="h5" className='text-white'>Welcome to SAVEPOINT</Typography>
+      <LinearProgress className="w-1/3 m-20"/>  
     </Box>
   );
 }
