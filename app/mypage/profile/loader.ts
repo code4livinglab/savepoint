@@ -12,12 +12,16 @@ export const getSessionUserId = async () => {
 export const userInfoLoader = async () => {
   try {
     const userId = await getSessionUserId();
+    if (!userId) {
+      return null; // または適切なデフォルト値を返す
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
     return user;
   } catch (error) {
     console.error("Error loading project:", error);
-    return [];
+    return null; // エラー時のデフォルト値を返す
   }
 };
