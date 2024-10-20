@@ -140,10 +140,9 @@ const ProjectCard = ({ project }) => {
           {isEditing ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Typography
-                style={{ color: "gray", my: 2 }}
+                style={{ color: "gray", marginTop: 2, marginBottom: 1 }}
                 variant="subtitle1"
                 fontWeight="bold"
-                gutterBottom
               >
                 タイトル
               </Typography>
@@ -151,14 +150,15 @@ const ProjectCard = ({ project }) => {
                 {...register("name", { required: true })}
                 fullWidth
                 defaultValue={project.name}
-                style={{ color: "black" }}
+                InputProps={{
+                  style: { color: "black" },
+                }}
               />
 
               <Typography
                 variant="subtitle1"
                 fontWeight="bold"
-                gutterBottom
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, mb: 1 }}
                 style={{ color: "gray" }}
               >
                 概要
@@ -169,7 +169,9 @@ const ProjectCard = ({ project }) => {
                 multiline
                 rows={4}
                 defaultValue={project.description}
-                style={{ color: "black" }}
+                InputProps={{
+                  style: { color: "black" },
+                }}
               />
 
               <Box sx={{ mt: 3, display: "flex", gap: 1 }}>
