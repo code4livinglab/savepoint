@@ -4798,11 +4798,11 @@ __metadata:
   linkType: hard
 
 "detect-gpu@npm:^5.0.28":
-  version: 5.0.52
-  resolution: "detect-gpu@npm:5.0.52"
+  version: 5.0.53
+  resolution: "detect-gpu@npm:5.0.53"
   dependencies:
     webgl-constants: ^1.1.1
-  checksum: ef231f567ea0b449894fa9db5ae964ae884bcdfd9e3407bd99ecc46b44c820c40bd3ee0cd4dc461757fde6eb15e0060255963ca17aa5983c2a1c5b3af60fb5af
+  checksum: eccfacd6e60eebe64ca0c836d893cd9a0f59c8948257645b0aa551485f20f45d0ef6d972388dd719f059876e06deb7604177dcd5ab82d6ca965e753428e56cf6
   languageName: node
   linkType: hard
 
