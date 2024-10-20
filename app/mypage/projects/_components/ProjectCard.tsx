@@ -20,11 +20,20 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { updateProjectAction } from "../actions";
 
-const ProjectCard = ({ project }) => {
+interface ProjectCardProps {
+  project: Project;
+}
+
+interface FormData {
+  name: string;
+  description: string;
+}
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset } = useForm<FormData>({
     defaultValues: {
       name: project.name,
       description: project.description,
@@ -45,7 +54,7 @@ const ProjectCard = ({ project }) => {
     setIsEditing(true);
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: FormData) => {
     const result = await updateProjectAction(project.id, data);
     if (result.success) {
       setIsEditing(false);
@@ -123,15 +132,16 @@ const ProjectCard = ({ project }) => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            color: "black",
+            // my: 2,
+            fontWeight: "bold",
           }}
-          style={{ color: "black", my: 2 }}
-          fontWeight="bold"
         >
           {project?.name}
           <IconButton
             aria-label="close"
             onClick={handleClose}
-            style={{ color: "black" }}
+            sx={{ color: "black" }}
           >
             <CloseIcon />
           </IconButton>
@@ -193,14 +203,14 @@ const ProjectCard = ({ project }) => {
                 variant="subtitle1"
                 fontWeight="bold"
                 gutterBottom
-                style={{ color: "gray", my: 2 }}
+                style={{ color: "gray" }}
               >
                 タイトル
               </Typography>
               <Typography
                 variant="body1"
                 gutterBottom
-                style={{ color: "black", my: 2 }}
+                style={{ color: "black" }}
               >
                 {project?.name}
               </Typography>
@@ -210,14 +220,14 @@ const ProjectCard = ({ project }) => {
                 fontWeight="bold"
                 gutterBottom
                 sx={{ mt: 2 }}
-                style={{ color: "gray", my: 2 }}
+                style={{ color: "gray" }}
               >
                 概要
               </Typography>
               <Typography
                 variant="body2"
                 gutterBottom
-                style={{ color: "black", my: 2 }}
+                style={{ color: "black" }}
               >
                 {project?.description}
               </Typography>
@@ -227,14 +237,14 @@ const ProjectCard = ({ project }) => {
                 fontWeight="bold"
                 gutterBottom
                 sx={{ mt: 2 }}
-                style={{ color: "gray", my: 2 }}
+                style={{ color: "gray" }}
               >
                 作成日
               </Typography>
               <Typography
                 variant="body2"
                 gutterBottom
-                style={{ color: "black", my: 2 }}
+                style={{ color: "black" }}
               >
                 {createdDate}
               </Typography>
@@ -244,14 +254,14 @@ const ProjectCard = ({ project }) => {
                 fontWeight="bold"
                 gutterBottom
                 sx={{ mt: 2 }}
-                style={{ color: "gray", my: 2 }}
+                style={{ color: "gray" }}
               >
                 更新日
               </Typography>
               <Typography
                 variant="body2"
                 gutterBottom
-                style={{ color: "black", my: 2 }}
+                style={{ color: "black" }}
               >
                 {updatedDate}
               </Typography>

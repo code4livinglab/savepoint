@@ -3,7 +3,15 @@
 import { prisma } from "@/app/prisma";
 import { getSessionUserId } from "./loader";
 
-export async function updateProjectAction(projectId, data) {
+interface UpdateProjectData {
+  name: string;
+  description: string;
+}
+
+export async function updateProjectAction(
+  projectId: string,
+  data: UpdateProjectData
+) {
   try {
     const userId = await getSessionUserId();
     if (!userId) {

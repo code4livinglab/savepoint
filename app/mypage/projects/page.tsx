@@ -3,7 +3,7 @@ import { AppBar } from "../../projects/_components/AppBar";
 import UserProjectList from "./UserProjectList";
 import { Box } from "@mui/material";
 
-const MyProjectListPage = ({ children }: { children: React.ReactNode }) => {
+const MyProjectListPage = () => {
   return (
     <>
       <AppBar />
