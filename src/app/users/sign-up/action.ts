@@ -2,7 +2,7 @@
 
 import { hash } from "bcryptjs";
 import { signIn } from "@/auth";
-import { prisma } from '@/src/prisma'
+import { prisma } from '@/prisma'
 
 export async function signUpAction(prevState: any, formData: FormData) {
   // フォームの取得

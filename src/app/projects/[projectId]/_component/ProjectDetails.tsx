@@ -2,8 +2,8 @@ import {
   Paper,
   Stack,
 } from '@mui/material'
-// import { File } from '@/app/_types/file'
-import { Project } from '@/src/app/_types/project'
+// import { File } from '@/types'
+import { Project } from '@/types'
 import { DownloadButton } from './DownloadButton'
 import { MarkdownViewer } from './MarkdownViewer'
 import { CloseButton } from '../../_components/CloseButton'

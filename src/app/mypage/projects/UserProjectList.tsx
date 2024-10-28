@@ -1,5 +1,5 @@
 import ProjectCard from "./_components/ProjectCard";
-import { Project } from "@/app/_types/project";
+import { Project } from "@/types";
 import { loader } from "./loader";
 import { Box, Typography, Stack } from "@mui/material";
 

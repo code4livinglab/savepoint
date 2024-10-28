@@ -1,5 +1,5 @@
 import Markdown from 'react-markdown'
-import { Project } from '@/src/app/_types/project'
+import { Project } from '@/types'
 
 export const MarkdownViewer = ({
   project,

@@ -1,6 +1,6 @@
 "use client";
 
-import { Project } from "@/app/_types/project";
+import { Project } from "@/types";
 import {
   ArcballControls,
   Billboard,

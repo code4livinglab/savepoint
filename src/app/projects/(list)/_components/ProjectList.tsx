@@ -1,4 +1,4 @@
-import { Project } from "@/app/_types/project";
+import { Project } from "@/types";
 import Explore from "./Explore";
 import { pca } from "../_lib/pca";
 import { loader } from "../loader";
