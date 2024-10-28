@@ -13,10 +13,16 @@ import {
   IconButton,
   TextField,
   Snackbar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import { updateUserAction } from "../actions"; // 新しく作成したアクションをインポート
+import DeleteIcon from "@mui/icons-material/Delete";
+import { updateUserAction, deleteUserAction, signOutAction } from "../actions"; // 新しく作成したアクションをインポート
 
 interface UserProfileProps {
   profile: {
@@ -33,6 +39,8 @@ function UserProfile({ profile }: UserProfileProps) {
   });
   const [editedProfile, setEditedProfile] = useState({ ...profile });
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [confirmId, setConfirmId] = useState("");
 
   if (!profile) {
     return <div>Profile data is not available</div>;
@@ -59,6 +67,31 @@ function UserProfile({ profile }: UserProfileProps) {
         message: result.error || "更新に失敗しました。",
       });
     }
+  };
+
+  const handleDelete = async () => {
+    if (confirmId !== profile.id) {
+      setSnackbar({
+        open: true,
+        message: "入力されたIDが正しくありません。",
+      });
+      return;
+    }
+
+    const result = await deleteUserAction(profile.id);
+
+    if (result.success) {
+      setSnackbar({ open: true, message: "ユーザーが削除されました。" });
+      signOutAction();
+    } else {
+      setSnackbar({
+        open: true,
+        message: result.error || "ユーザー削除に失敗しました。",
+      });
+    }
+
+    setDeleteDialogOpen(false);
+    setConfirmId("");
   };
 
   const handleChange = (field: keyof typeof editMode, value: string) => {
@@ -125,6 +158,42 @@ function UserProfile({ profile }: UserProfileProps) {
         {renderField("name", "ユーザー名")}
         {/* {renderField("email", "メールアドレス")} */}
       </List>
+
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<DeleteIcon />}
+        sx={{ marginTop: "1rem" }}
+        onClick={() => setDeleteDialogOpen(true)}
+      >
+        ユーザー削除
+      </Button>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>ユーザー削除確認</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ユーザーを削除するには、自分のIDを入力してください。
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="ユーザーID"
+            fullWidth
+            value={confirmId}
+            onChange={(e) => setConfirmId(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)}>キャンセル</Button>
+          <Button onClick={handleDelete} color="error">
+            削除
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackbar.open}
