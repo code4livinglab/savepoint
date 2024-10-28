@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Container,
   Typography,
@@ -29,7 +29,7 @@ interface UserProfileProps {
     id: string;
     name: string;
     email: string;
-  };
+  } | null;
 }
 
 function UserProfile({ profile }: UserProfileProps) {
@@ -43,7 +43,7 @@ function UserProfile({ profile }: UserProfileProps) {
   const [confirmId, setConfirmId] = useState("");
 
   if (!profile) {
-    return <div>Profile data is not available</div>;
+    return <div>No user information available</div>;
   }
 
   const handleEdit = (field: keyof typeof editMode) => {
@@ -54,7 +54,9 @@ function UserProfile({ profile }: UserProfileProps) {
     setEditMode({ ...editMode, [field]: false });
 
     const formData = new FormData();
+    // @ts-ignore
     formData.append("name", editedProfile.name);
+    // @ts-ignore
     formData.append("email", editedProfile.email);
 
     const result = await updateUserAction(formData);
@@ -155,8 +157,12 @@ function UserProfile({ profile }: UserProfileProps) {
         <ListItem divider>
           <ListItemText primary="ユーザーID" secondary={profile.id} />
         </ListItem>
-        {renderField("name", "ユーザー名")}
-        {/* {renderField("email", "メールアドレス")} */}
+        <ListItem divider>
+          <ListItemText primary="ユーザー名" secondary={profile.name} />
+        </ListItem>
+        <ListItem divider>
+          <ListItemText primary="メールアドレス" secondary={profile.email} />
+        </ListItem>
       </List>
 
       <Button
@@ -203,6 +209,6 @@ function UserProfile({ profile }: UserProfileProps) {
       />
     </Container>
   );
-}
+};
 
 export default UserProfile;
