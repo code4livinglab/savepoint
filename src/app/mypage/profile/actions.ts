@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma } from "@/app/prisma";
+import { prisma } from "@/prisma";
 import { getSessionUserId } from "./loader"; // セッションユーザーIDを取得する関数をインポート
-import { signOut } from "../../auth";
+import { signOut } from "../../../auth";
 
 export async function updateUserAction(formData: FormData) {
   try {

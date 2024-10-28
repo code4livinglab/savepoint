@@ -1,4 +1,4 @@
-import { Project } from '@/app/_types/project'
+import { Project } from '@/src/app/_types/project'
 import { useRouter } from 'next/navigation'
 import {
   List,
@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material'
-import { CloseButton } from '../_components/CloseButton'
+import { CloseButton } from './CloseButton'
 
 
 const ProjectSearchList = ({

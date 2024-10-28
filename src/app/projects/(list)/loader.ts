@@ -1,5 +1,5 @@
-import { Project, ProjectRead } from "@/app/_types/project"
-import { prisma } from "@/app/prisma"
+import { Project, ProjectRead } from "@/types"
+import { prisma } from "@/prisma"
 
 export const loader = async () => {
   try {

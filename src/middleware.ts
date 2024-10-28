@@ -1,4 +1,4 @@
-import { auth } from "@/app/auth";
+import { auth } from "@/auth";
 
 export default auth((request) => {
   // 認証が不要なページ

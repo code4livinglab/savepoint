@@ -3,7 +3,7 @@ import { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { object, string, ZodError } from "zod";
-import { prisma } from "@/app/prisma";
+import { prisma } from "@/prisma";
 
 export const signInSchema = object({
   email: string({ required_error: "Email is required" })

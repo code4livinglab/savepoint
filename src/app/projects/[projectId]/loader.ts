@@ -1,5 +1,5 @@
-import { prisma } from '@/app/prisma'
-import { auth } from "../../auth"
+import { prisma } from '@/src/prisma'
+import { auth } from "../../../auth"
 
 export const getRole = async (projectId: string) => {
   // セッションの取得

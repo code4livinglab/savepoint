@@ -1,7 +1,7 @@
 'use server'
 
-import { Project } from '@/app/_types/project'
-import { prisma } from '@/app/prisma'
+import { Project } from '@/src/app/_types/project'
+import { prisma } from '@/src/prisma'
 
 export const action = async (prevState: any, formData: FormData) => {
   const query = formData.get('query')?.toString() ?? ''

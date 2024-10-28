@@ -1,8 +1,8 @@
 "use server";
 
 import { hash } from "bcryptjs";
-import { signIn } from "@/app/auth";
-import { prisma } from '@/app/prisma'
+import { signIn } from "@/auth";
+import { prisma } from '@/src/prisma'
 
 export async function signUpAction(prevState: any, formData: FormData) {
   // フォームの取得

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/app/prisma";
+import { prisma } from "@/prisma";
 import { getSessionUserId } from "./loader";
 
 interface UpdateProjectData {

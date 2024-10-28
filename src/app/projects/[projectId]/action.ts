@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { S3Client, GetObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import { fromCognitoIdentityPool } from '@aws-sdk/credential-providers'
-import { prisma } from '@/app/prisma'
+import { prisma } from '@/src/prisma'
 import { getSessionUserId } from './loader'
 
 const bucketName = process.env.BUCKET_NAME_RAW
