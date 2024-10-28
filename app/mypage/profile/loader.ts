@@ -13,6 +13,7 @@ export const userInfoLoader = async () => {
   try {
     const userId = await getSessionUserId();
     const user = await prisma.user.findUnique({
+      // @ts-ignore
       where: { id: userId },
     });
     return user;

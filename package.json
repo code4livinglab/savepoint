@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ai-sdk/openai": "^0.0.40",
+    "@ai-sdk/openai": "^0.0.68",
     "@auth0/nextjs-auth0": "^3.3.0",
     "@aws-sdk/client-s3": "^3.490.0",
     "@emotion/react": "^11.13.3",
@@ -23,7 +23,7 @@
     "@react-three/drei": "^9.114.6",
     "@react-three/fiber": "^8.17.10",
     "@tailwindcss/typography": "^0.5.10",
-    "ai": "^3.3.0",
+    "ai": "^3.4.16",
     "aws-sdk": "^2.1500.0",
     "bcryptjs": "^2.4.3",
     "csv-parse": "^5.5.3",
@@ -63,5 +63,9 @@
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.6.3"
+  },
+  "volta": {
+    "node": "23.1.0",
+    "pnpm": "9.12.3"
   }
 }

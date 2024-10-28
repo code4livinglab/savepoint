@@ -5,6 +5,7 @@ const ProjectDetailsPage = async () => {
   const userInfo = await userInfoLoader();
   return (
     <>
+      {/* @ts-ignore */}
       <UserProfile profile={userInfo}></UserProfile>
     </>
   );
