@@ -17,7 +17,7 @@ const UserProjectList = async () => {
         <Typography variant="h5" sx={{ my: 3, fontWeight: "bold" }}>
           プロジェクト一覧
         </Typography>
-        <Stack direction="row" spacing={3}>
+        <Stack spacing={3}>
           {projects.map(
             (project) =>
               project && (
