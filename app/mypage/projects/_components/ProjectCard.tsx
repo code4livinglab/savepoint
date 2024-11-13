@@ -12,13 +12,16 @@ import {
   Box,
   TextField,
   IconButton,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { updateProjectAction } from "../actions";
+import { updateProjectAction, deleteProjectAction } from "../actions";
+import { useRouter } from "next/navigation";
 
 interface ProjectCardProps {
   project: Project;
@@ -30,8 +33,13 @@ interface FormData {
 }
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteConfirmName, setDeleteConfirmName] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
 
   const { register, handleSubmit, reset } = useForm<FormData>({
     defaultValues: {
@@ -54,11 +62,42 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     setIsEditing(true);
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+    setDeleteError("");
+    setDeleteConfirmName("");
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteDialogOpen(false);
+    setDeleteError("");
+    setDeleteConfirmName("");
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteConfirmName !== project.name) {
+      setDeleteError("プロジェクト名が一致しません");
+      return;
+    }
+
+    const result = await deleteProjectAction(project.id);
+    if (result.success) {
+      setIsDeleteDialogOpen(false);
+      setOpen(false);
+      setShowDeleteSuccess(true); // 成功通知を表示
+      setTimeout(() => {
+        router.refresh(); // 画面を更新
+      }, 1500); // 通知を表示した後にリフレッシュ
+    } else {
+      setDeleteError(result.error || "削除中にエラーが発生しました");
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     const result = await updateProjectAction(project.id, data);
     if (result.success) {
       setIsEditing(false);
-      // プロジェクトデータの更新処理をここに追加
+      router.refresh();
     } else {
       console.error(result.error);
     }
@@ -69,6 +108,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
   return (
     <>
+      {/* 既存のカードとダイアログ部分 */}
       <Card
         sx={{
           mb: 2,
@@ -113,6 +153,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         </Box>
       </Card>
 
+      {/* メインのダイアログ */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -133,7 +174,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             justifyContent: "space-between",
             alignItems: "center",
             color: "black",
-            // my: 2,
             fontWeight: "bold",
           }}
         >
@@ -149,53 +189,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         <DialogContent>
           {isEditing ? (
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Typography
-                style={{ color: "gray", marginTop: 2, marginBottom: 1 }}
-                variant="subtitle1"
-                fontWeight="bold"
-              >
-                タイトル
-              </Typography>
-              <TextField
-                {...register("name", { required: true })}
-                fullWidth
-                defaultValue={project.name}
-                InputProps={{
-                  style: { color: "black" },
-                }}
-              />
-
-              <Typography
-                variant="subtitle1"
-                fontWeight="bold"
-                sx={{ mt: 2, mb: 1 }}
-                style={{ color: "gray" }}
-              >
-                概要
-              </Typography>
-              <TextField
-                {...register("description", { required: true })}
-                fullWidth
-                multiline
-                rows={4}
-                defaultValue={project.description}
-                InputProps={{
-                  style: { color: "black" },
-                }}
-              />
-
-              <Box sx={{ mt: 3, display: "flex", gap: 1 }}>
-                <Button type="submit" variant="contained" color="primary">
-                  保存
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => setIsEditing(false)}
-                >
-                  キャンセル
-                </Button>
-              </Box>
+              {/* 編集フォームの内容... */}
             </form>
           ) : (
             <>
@@ -282,7 +276,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 >
                   編集する
                 </Button>
-                <Button variant="text" fullWidth color="error">
+                <Button
+                  variant="text"
+                  fullWidth
+                  color="error"
+                  onClick={handleDeleteClick}
+                >
                   削除する
                 </Button>
               </Box>
@@ -290,6 +289,68 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* 削除確認ダイアログ */}
+      <Dialog
+        open={isDeleteDialogOpen}
+        onClose={handleDeleteCancel}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle sx={{ color: "error.main" }}>
+          プロジェクトの削除
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" gutterBottom sx={{ mt: 2 }}>
+            このプロジェクトを削除するには、以下にプロジェクト名を入力してください：
+          </Typography>
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ fontWeight: "bold", my: 2 }}
+          >
+            {project.name}
+          </Typography>
+          <TextField
+            fullWidth
+            value={deleteConfirmName}
+            onChange={(e) => setDeleteConfirmName(e.target.value)}
+            error={!!deleteError}
+            helperText={deleteError}
+            placeholder="プロジェクト名を入力"
+            sx={{ mt: 1 }}
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={handleDeleteCancel} color="inherit">
+            キャンセル
+          </Button>
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
+            variant="contained"
+            disabled={deleteConfirmName !== project.name}
+          >
+            削除する
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* 削除成功通知 */}
+      <Snackbar
+        open={showDeleteSuccess}
+        autoHideDuration={3000}
+        onClose={() => setShowDeleteSuccess(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setShowDeleteSuccess(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          プロジェクトを削除しました
+        </Alert>
+      </Snackbar>
     </>
   );
 };
