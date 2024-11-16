@@ -22,7 +22,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { updateUserAction, deleteUserAction, signOutAction } from "../actions"; // 新しく作成したアクションをインポート
+import { updateUserAction, deleteUserAction, signOutAction } from "../actions";
 
 interface UserProfileProps {
   profile: {
@@ -34,8 +34,8 @@ interface UserProfileProps {
 
 function UserProfile({ profile }: UserProfileProps) {
   const [editMode, setEditMode] = useState({
+    id: false,
     name: false,
-    email: false,
   });
   const [editedProfile, setEditedProfile] = useState({ ...profile });
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
@@ -53,14 +53,24 @@ function UserProfile({ profile }: UserProfileProps) {
   const handleSave = async (field: keyof typeof editMode) => {
     setEditMode({ ...editMode, [field]: false });
 
-    const formData = new FormData();
-    // @ts-ignore
-    formData.append("name", editedProfile.name);
-    // @ts-ignore
-    formData.append("email", editedProfile.email);
+    // Check if id and name are valid before proceeding
+    if (!editedProfile.id || !editedProfile.name) {
+      setSnackbar({
+        open: true,
+        message: "IDと名前は必須です。",
+      });
+      return;
+    }
 
+    // Create FormData and append the user profile data
+    const formData = new FormData();
+    formData.append("id", editedProfile.id); // Safe to append
+    formData.append("name", editedProfile.name); // Safe to append
+
+    // Call the API to update user profile
     const result = await updateUserAction(formData);
 
+    // Show appropriate Snackbar message based on the result
     if (result.success) {
       setSnackbar({ open: true, message: "プロフィールを更新しました。" });
     } else {
@@ -100,14 +110,16 @@ function UserProfile({ profile }: UserProfileProps) {
     setEditedProfile({ ...editedProfile, [field]: value });
   };
 
-  const renderField = (field: "name" | "email", label: string) => (
+  const renderField = (field: "id" | "name" | "email", label: string) => (
     <ListItem divider>
       <ListItemText
         primary={label}
         secondary={
+          // @ts-ignore
           editMode[field] ? (
             <TextField
               value={editedProfile[field]}
+              // @ts-ignore
               onChange={(e) => handleChange(field, e.target.value)}
               fullWidth
               sx={{ input: { color: "white" } }}
@@ -117,21 +129,23 @@ function UserProfile({ profile }: UserProfileProps) {
           )
         }
       />
-      <ListItemSecondaryAction>
-        <IconButton
-          edge="end"
-          aria-label={editMode[field] ? "save" : "edit"}
-          onClick={() =>
-            editMode[field] ? handleSave(field) : handleEdit(field)
-          }
-        >
-          {editMode[field] ? (
-            <SaveIcon sx={{ color: "#fff" }} />
-          ) : (
-            <EditIcon sx={{ color: "#fff" }} />
-          )}
-        </IconButton>
-      </ListItemSecondaryAction>
+      {field !== "email" && (
+        <ListItemSecondaryAction>
+          <IconButton
+            edge="end"
+            aria-label={editMode[field] ? "save" : "edit"}
+            onClick={() =>
+              editMode[field] ? handleSave(field) : handleEdit(field)
+            }
+          >
+            {editMode[field] ? (
+              <SaveIcon sx={{ color: "#fff" }} />
+            ) : (
+              <EditIcon sx={{ color: "#fff" }} />
+            )}
+          </IconButton>
+        </ListItemSecondaryAction>
+      )}
     </ListItem>
   );
 
@@ -154,15 +168,9 @@ function UserProfile({ profile }: UserProfileProps) {
       <List
         sx={{ width: "100%", backgroundColor: "#2c2c2c", borderRadius: "8px" }}
       >
-        <ListItem divider>
-          <ListItemText primary="ユーザーID" secondary={profile.id} />
-        </ListItem>
-        <ListItem divider>
-          <ListItemText primary="ユーザー名" secondary={profile.name} />
-        </ListItem>
-        <ListItem divider>
-          <ListItemText primary="メールアドレス" secondary={profile.email} />
-        </ListItem>
+        {renderField("id", "ユーザーID")}
+        {renderField("name", "ユーザー名")}
+        {renderField("email", "メールアドレス")}
       </List>
 
       <Button
@@ -209,6 +217,6 @@ function UserProfile({ profile }: UserProfileProps) {
       />
     </Container>
   );
-};
+}
 
 export default UserProfile;
