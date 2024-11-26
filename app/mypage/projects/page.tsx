@@ -3,6 +3,8 @@ import { AppBar } from "../../projects/_components/AppBar";
 import UserProjectList from "./UserProjectList";
 import { Box } from "@mui/material";
 
+export const dynamic = "force-dynamic";
+
 const MyProjectListPage = () => {
   return (
     <>
