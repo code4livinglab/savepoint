@@ -20,22 +20,22 @@ const nextConfig = {
     ];
   },
   transpilePackages: ["three"],
-  experimental: {
-    optimizeCss: false, // CSSの最適化を無効化
-  },
-  webpack: (config, { dev, isServer }) => {
-    // キャッシュの設定を調整
-    config.cache = {
-      type: "filesystem",
-      buildDependencies: {
-        config: [__filename],
-      },
-      name: `${isServer ? "server" : "client"}-${
-        dev ? "development" : "production"
-      }`,
-    };
-    return config;
-  },
+  // experimental: {
+  //   optimizeCss: false, // CSSの最適化を無効化
+  // },
+  // webpack: (config, { dev, isServer }) => {
+  //   // キャッシュの設定を調整
+  //   config.cache = {
+  //     type: "filesystem",
+  //     buildDependencies: {
+  //       config: [__filename],
+  //     },
+  //     name: `${isServer ? "server" : "client"}-${
+  //       dev ? "development" : "production"
+  //     }`,
+  //   };
+  //   return config;
+  // },
 };
 
 module.exports = nextConfig;

@@ -27,7 +27,7 @@ cp .env.sample .env
 ```shell
 cd savepoint
 pnpm install
-pnpx prisma init  # Prismaのセットアップ
+pnpx prisma generate  # Prismaのセットアップ
 pnpm build
 pnpm start
 ```
