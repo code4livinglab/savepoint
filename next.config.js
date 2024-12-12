@@ -3,23 +3,23 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/projects',
+        source: "/",
+        destination: "/projects",
         permanent: true,
       },
       {
-        source: '/sign-in',
-        destination: '/users/sign-in',
+        source: "/sign-in",
+        destination: "/users/sign-in",
         permanent: true,
       },
       {
-        source: '/sign-up',
-        destination: '/users/sign-up',
+        source: "/sign-up",
+        destination: "/users/sign-up",
         permanent: true,
       },
-    ]
+    ];
   },
-  transpilePackages: ['three'],
-}
+  transpilePackages: ["three"],
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
