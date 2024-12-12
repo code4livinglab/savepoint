@@ -4,6 +4,8 @@ import Link from "next/link";
 import {
   Alert,
   Box,
+  Checkbox,
+  FormControlLabel,
   Link as MUILink,
   Paper,
   TextField,
@@ -79,6 +81,29 @@ const SignUpForm = () => {
             type="password"
             fullWidth
             variant="outlined"
+          />
+          <FormControlLabel
+            control={<Checkbox />}
+            label={
+              <>
+                <MUILink
+                  component={Link}
+                  href="https://ludicrous-flyingfish-cc4.notion.site/terms-of-use"
+                  sx={{ color: 'info.main' }}
+                >
+                  利用規約
+                </MUILink>
+                と
+                <MUILink
+                  component={Link}
+                  href="http://ludicrous-flyingfish-cc4.notion.site/privacy-policy"
+                  sx={{ color: 'info.main' }}
+                >
+                  プライバシーポリシー
+                </MUILink>
+                に同意する。
+              </>
+            }
           />
           <SignUpFormButton />
         </Box>
