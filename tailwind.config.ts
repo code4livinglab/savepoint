@@ -6,7 +6,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  important: true, // MUIとの競合を防ぐために追加
+  important: true,  // MUIとの競合を防ぐために追加
   theme: {
     extend: {
       backgroundImage: {
@@ -16,15 +16,7 @@ const config: Config = {
       },
     },
   },
-  // MUIとの共存のための設定
-  corePlugins: {
-    preflight: false, // MUIのデフォルトスタイルとの競合を防ぐ
-  },
   plugins: [require("@tailwindcss/typography")],
-  // ビルド時の最適化設定
-  future: {
-    hoverOnlyWhenSupported: true,
-  },
 };
 
 export default config;
