@@ -16,6 +16,7 @@ model User {
   email       String        @unique
   password    String
   projects    ProjectUser[]
+  notifications NotificationUser[]
   created     DateTime      @default(now())
   updated     DateTime      @default(now()) @updatedAt
 }
@@ -36,8 +37,28 @@ model ProjectUser {
   project   Project @relation(fields: [projectId], references: [id])
   projectId String
   role      ProjectRole
+  created   DateTime @default(now())
+  updated   DateTime @default(now()) @updatedAt
 
   @@id([userId, projectId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  message   String
+  url       String?
+  users     NotificationUser[]
+  created   DateTime @default(now())
+  updated   DateTime @default(now()) @updatedAt
+}
+
+model NotificationUser {
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  notification   Notification @relation(fields: [notificationId], references: [id])
+  notificationId String
+  isRead         Boolean      @default(false)
+  @@id([notificationId, userId])
 }
 
 enum ProjectRole {
