@@ -14,6 +14,7 @@ import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useRouter, useParams, usePathname } from "next/navigation";
 import { useRef, useState, useCallback, useEffect } from "react";
 import * as THREE from "three";
+import { colorMap } from "../_lib/color-map";
 
 const Box = ({
   project,
@@ -37,6 +38,10 @@ const Box = ({
     }
   }, [router, pathname, project, onSelect]);
 
+  // クラスターに応じた色を取得
+  const cluster = project.cluster;
+  const color = colorMap(cluster);
+
   return (
     <mesh
       position={new THREE.Vector3(...project.embedding)}
@@ -46,7 +51,7 @@ const Box = ({
       }}
     >
       <sphereGeometry args={[2]} />
-      <meshStandardMaterial emissive="white" />
+      <meshStandardMaterial emissive={color} />
       <Billboard>
         <Text
           fontSize={2}
@@ -120,7 +125,11 @@ const CameraController = ({
   return null;
 };
 
-const Explore = ({ projects }: { projects: Project[] }) => {
+const Explore = ({
+  projects,
+}: {
+  projects: Project[],
+}) => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isMoving, setIsMoving] = useState(false);
   const params = useParams();
