@@ -1,6 +1,7 @@
 "use server";
 
 import { hash } from "bcryptjs";
+import { redirect } from "next/navigation";
 import { signIn } from "@/app/auth";
 import { prisma } from '@/app/prisma'
 
@@ -11,9 +12,10 @@ export async function signUpAction(prevState: any, formData: FormData) {
   const email = formData.get("email")?.toString() ?? "";
   const password = formData.get("password")?.toString() ?? "";
   const password2 = formData.get("password2")?.toString() ?? "";
+  const agreement = formData.get("agreement")?.toString() ?? "";
 
   // バリデーション
-  if (!id || !username || !email || !password || !password2) {
+  if (!id || !username || !email || !password || !password2 || !agreement) {
     return { success: false, error: "全ての項目を入力してください。" };
   }
 
@@ -65,12 +67,13 @@ export async function signUpAction(prevState: any, formData: FormData) {
       password: password, // ハッシュ化前のパスワードを使用
       redirect: false,
     });
-
-    return { success: true, error: null };
   } catch (error: any) {
     return {
       success: false,
       error: error.message || "予期せぬエラーが発生しました。",
     };
   }
+
+  redirect("/projects");
+  return { success: true, error: null };
 }

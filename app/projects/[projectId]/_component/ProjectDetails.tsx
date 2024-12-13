@@ -1,19 +1,17 @@
 import {
+  Link as MUILink,
   Paper,
   Stack,
-  TextField,
+  Typography,
 } from '@mui/material'
 // import { File } from '@/app/_types/file'
 import { Project } from '@/app/_types/project'
 import { DownloadButton } from './DownloadButton'
 import { MarkdownViewer } from './MarkdownViewer'
-import { CloseButton } from '../../_components/CloseButton';
+import { CloseButton } from '../../_components/CloseButton'
+import Link from 'next/link'
 
-export const ProjectDetails = ({
-  project,
-}: {
-  project: Project,
-}) => {
+export const ProjectDetails = ({ project }: { project: Project }) => {
   return (
     <Paper
       elevation={3}
@@ -35,25 +33,53 @@ export const ProjectDetails = ({
             ))}
           </>
         )} */}
+        <Typography
+          variant="caption"
+          sx={{ width: '100%' }}
+        >
+          <MUILink
+            component={Link}
+            href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja"
+            sx={{ color: 'info.main' }}
+          >
+            &nbsp;CC BY-SA 4.0&nbsp;
+          </MUILink>
+          のライセンスに基づいて公開
+          <img 
+            className="inline-block h-4 mx-1"
+            src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
+            alt=""
+          />
+          <img 
+            className="inline-block h-4 mx-1"
+            src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
+            alt=""
+          />
+          <img 
+            className="inline-block h-4 mx-1"
+            src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
+            alt=""
+          />
+        </Typography>
         <DownloadButton projectId={project.id} />
         <CloseButton />
       </Stack>
     </Paper>
-  )
-}
+  );
+};
 
 const viewProjectFile = async (projectId: string, fileName: string) => {
   try {
     const response = await fetch(`/api/${projectId}/files/${fileName}`);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error("Network response was not ok");
     }
     const data = await response.json();
     const href = data.url;
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = href;
-    a.target = '_blank';
+    a.target = "_blank";
     document.body.appendChild(a);
     a.click();
     a.remove();

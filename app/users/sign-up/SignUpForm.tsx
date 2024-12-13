@@ -4,14 +4,14 @@ import Link from "next/link";
 import {
   Alert,
   Box,
+  Checkbox,
+  FormControlLabel,
   Link as MUILink,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import { useFormState } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { SignUpFormButton } from "./SignUpFormButton";
 import { signUpAction } from "./action";
 
@@ -22,13 +22,6 @@ const initialState = {
 
 const SignUpForm = () => {
   const [state, formAction] = useFormState(signUpAction, initialState);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state.success) {
-      router.push("/");
-    }
-  }, [state.success, router]);
 
   return (
     <Box className="flex items-center justify-center min-h-screen">
@@ -79,6 +72,29 @@ const SignUpForm = () => {
             type="password"
             fullWidth
             variant="outlined"
+          />
+          <FormControlLabel
+            control={<Checkbox name="agreement" />}
+            label={
+              <>
+                <MUILink
+                  component={Link}
+                  href="https://ludicrous-flyingfish-cc4.notion.site/terms-of-use"
+                  sx={{ color: 'info.main' }}
+                >
+                  利用規約
+                </MUILink>
+                と
+                <MUILink
+                  component={Link}
+                  href="http://ludicrous-flyingfish-cc4.notion.site/privacy-policy"
+                  sx={{ color: 'info.main' }}
+                >
+                  プライバシーポリシー
+                </MUILink>
+                に同意する。
+              </>
+            }
           />
           <SignUpFormButton />
         </Box>
