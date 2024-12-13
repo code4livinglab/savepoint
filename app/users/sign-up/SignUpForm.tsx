@@ -74,7 +74,7 @@ const SignUpForm = () => {
             variant="outlined"
           />
           <FormControlLabel
-            control={<Checkbox />}
+            control={<Checkbox name="agreement" />}
             label={
               <>
                 <MUILink
