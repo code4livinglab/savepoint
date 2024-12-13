@@ -3,7 +3,7 @@ export type Project = {
   name: string;
   description: string;
   embedding: number[];
-  cluster: number;
+  cluster?: number;
   created: Date;
   updated: Date;
 }

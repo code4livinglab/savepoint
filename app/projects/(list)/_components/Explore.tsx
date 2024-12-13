@@ -39,7 +39,7 @@ const Box = ({
   }, [router, pathname, project, onSelect]);
 
   // クラスターに応じた色を取得
-  const cluster = project.cluster;
+  const cluster = project.cluster ?? 0;
   const color = colorMap(cluster);
 
   return (
