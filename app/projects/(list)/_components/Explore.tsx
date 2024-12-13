@@ -45,12 +45,12 @@ const Box = ({
         router.push(`/projects/${project.id}`);
       }}
     >
-      <sphereGeometry args={[0.5]} />
+      <sphereGeometry args={[2]} />
       <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
       <Billboard>
         <Text
-          fontSize={0.5}
-          maxWidth={6}
+          fontSize={2}
+          maxWidth={24}
           anchorY="top"
           overflowWrap="break-word"
         >
