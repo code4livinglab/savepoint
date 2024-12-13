@@ -14,6 +14,7 @@ import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useRouter, useParams, usePathname } from "next/navigation";
 import { useRef, useState, useCallback, useEffect } from "react";
 import * as THREE from "three";
+import { colorMap } from "../_lib/color-map";
 
 const Box = ({
   project,
@@ -37,6 +38,10 @@ const Box = ({
     }
   }, [router, pathname, project, onSelect]);
 
+  // クラスターに応じた色を取得
+  const cluster = project.cluster ?? 0;
+  const color = colorMap(cluster);
+
   return (
     <mesh
       position={new THREE.Vector3(...project.embedding)}
@@ -45,16 +50,16 @@ const Box = ({
         router.push(`/projects/${project.id}`);
       }}
     >
-      <sphereGeometry args={[0.5]} />
-      <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
+      <sphereGeometry args={[2]} />
+      <meshStandardMaterial emissive={color} />
       <Billboard>
         <Text
-          fontSize={0.5}
-          maxWidth={6}
+          fontSize={2}
+          maxWidth={24}
           anchorY="top"
           overflowWrap="break-word"
         >
-          {project.name}
+          {'\n' + project.name}
         </Text>
       </Billboard>
     </mesh>
@@ -120,7 +125,11 @@ const CameraController = ({
   return null;
 };
 
-const Explore = ({ projects }: { projects: Project[] }) => {
+const Explore = ({
+  projects,
+}: {
+  projects: Project[],
+}) => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isMoving, setIsMoving] = useState(false);
   const params = useParams();
@@ -153,12 +162,15 @@ const Explore = ({ projects }: { projects: Project[] }) => {
         <GizmoViewport />
       </GizmoHelper>
       <Stars />
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
       <CameraController
         target={
           selectedProject
-            ? new THREE.Vector3(...selectedProject.embedding)
+            ? (() => {
+                // プロジェクトの位置から一定数離れた位置をターゲットに設定
+                const position = new THREE.Vector3(...selectedProject.embedding);
+                const direction = position.clone().normalize();
+                return position.add(direction.multiplyScalar(48));
+              })()
             : null
         }
         isMoving={isMoving}
