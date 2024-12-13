@@ -46,7 +46,7 @@ const Box = ({
       }}
     >
       <sphereGeometry args={[2]} />
-      <meshStandardMaterial emissive="#CCB914" />
+      <meshStandardMaterial emissive="white" />
       <Billboard>
         <Text
           fontSize={2}
@@ -160,7 +160,7 @@ const Explore = ({ projects }: { projects: Project[] }) => {
                 // プロジェクトの位置から一定数離れた位置をターゲットに設定
                 const position = new THREE.Vector3(...selectedProject.embedding);
                 const direction = position.clone().normalize();
-                return position.add(direction.multiplyScalar(12));
+                return position.add(direction.multiplyScalar(48));
               })()
             : null
         }
