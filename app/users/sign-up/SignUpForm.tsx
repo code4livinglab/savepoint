@@ -12,8 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormState } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { SignUpFormButton } from "./SignUpFormButton";
 import { signUpAction } from "./action";
 
@@ -24,13 +22,6 @@ const initialState = {
 
 const SignUpForm = () => {
   const [state, formAction] = useFormState(signUpAction, initialState);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state.success) {
-      router.push("/");
-    }
-  }, [state.success, router]);
 
   return (
     <Box className="flex items-center justify-center min-h-screen">

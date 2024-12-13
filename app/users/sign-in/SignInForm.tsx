@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useFormState } from "react-dom";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import {
   Alert,
   Box,
@@ -22,13 +20,6 @@ const initialState = {
 
 const SignInForm = () => {
   const [state, formAction] = useFormState(signInAction, initialState);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state.success) {
-      router.push("/");
-    }
-  }, [state.success, router]);
 
   return (
     <Box className="flex items-center justify-center min-h-screen">

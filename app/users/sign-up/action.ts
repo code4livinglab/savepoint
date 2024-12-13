@@ -1,6 +1,7 @@
 "use server";
 
 import { hash } from "bcryptjs";
+import { redirect } from "next/navigation";
 import { signIn } from "@/app/auth";
 import { prisma } from '@/app/prisma'
 
@@ -65,12 +66,13 @@ export async function signUpAction(prevState: any, formData: FormData) {
       password: password, // ハッシュ化前のパスワードを使用
       redirect: false,
     });
-
-    return { success: true, error: null };
   } catch (error: any) {
     return {
       success: false,
       error: error.message || "予期せぬエラーが発生しました。",
     };
   }
+
+  redirect("/projects");
+  return { success: true, error: null };
 }
