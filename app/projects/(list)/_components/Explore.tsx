@@ -158,7 +158,12 @@ const Explore = ({ projects }: { projects: Project[] }) => {
       <CameraController
         target={
           selectedProject
-            ? new THREE.Vector3(...selectedProject.embedding)
+            ? (() => {
+                // プロジェクトの位置から一定数離れた位置をターゲットに設定
+                const position = new THREE.Vector3(...selectedProject.embedding);
+                const direction = position.clone().normalize();
+                return position.add(direction.multiplyScalar(12));
+              })()
             : null
         }
         isMoving={isMoving}
