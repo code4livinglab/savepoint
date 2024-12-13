@@ -46,7 +46,7 @@ const Box = ({
       }}
     >
       <sphereGeometry args={[2]} />
-      <meshStandardMaterial emissive="skyblue" emissiveIntensity={5} />
+      <meshStandardMaterial emissive="#CCB914" />
       <Billboard>
         <Text
           fontSize={2}
@@ -54,7 +54,7 @@ const Box = ({
           anchorY="top"
           overflowWrap="break-word"
         >
-          {project.name}
+          {'\n' + project.name}
         </Text>
       </Billboard>
     </mesh>
@@ -153,8 +153,6 @@ const Explore = ({ projects }: { projects: Project[] }) => {
         <GizmoViewport />
       </GizmoHelper>
       <Stars />
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} />
       <CameraController
         target={
           selectedProject
