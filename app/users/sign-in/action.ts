@@ -1,7 +1,8 @@
 "use server";
 
-import { signIn } from "@/app/auth";
+import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
+import { signIn } from "@/app/auth";
 
 export async function signInAction(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -20,9 +21,9 @@ export async function signInAction(prevState: any, formData: FormData) {
       password,
       redirect: false,
     });
-
-    return { success: true, error: null };
   } catch (error) {
+    console.error({ error })
+
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -36,4 +37,7 @@ export async function signInAction(prevState: any, formData: FormData) {
     }
     return { success: false, error: "予期せぬエラーが発生しました。" };
   }
+
+  redirect("/projects");
+  return { success: true, error: null };
 }
