@@ -32,9 +32,9 @@ model Project {
 }
 
 model ProjectUser {
-  user      User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project  @relation(fields: [projectId], references: [id])
   projectId String
   role      ProjectRole
   created   DateTime @default(now())
@@ -44,7 +44,7 @@ model ProjectUser {
 }
 
 model Notification {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   message   String
   url       String?
   users     NotificationUser[]
@@ -56,9 +56,9 @@ model NotificationUser {
   user           User         @relation(fields: [userId], references: [id])
   userId         String
   notification   Notification @relation(fields: [notificationId], references: [id])
-  notificationId String
+  notificationId Int
   isRead         Boolean      @default(false)
-  @@id([notificationId, userId])
+  @@id([userId, notificationId])
 }
 
 enum ProjectRole {
