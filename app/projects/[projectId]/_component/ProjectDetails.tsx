@@ -1,17 +1,14 @@
-import {
-  Link as MUILink,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material'
+import { Link as MUILink, Paper, Stack, Typography } from "@mui/material";
 // import { File } from '@/app/_types/file'
-import { Project } from '@/app/_types/project'
-import { DownloadButton } from './DownloadButton'
-import { MarkdownViewer } from './MarkdownViewer'
-import { CloseButton } from '../../_components/CloseButton'
-import Link from 'next/link'
+import { Project } from "@/app/_types/project";
+import { DownloadButton } from "./DownloadButton";
+import { MarkdownViewer } from "./MarkdownViewer";
+import { CloseButton } from "../../_components/CloseButton";
+import { getFileListWithSizes } from "../action";
+import Link from "next/link";
 
 export const ProjectDetails = ({ project }: { project: Project }) => {
+  getFileListWithSizes(project.id).then(console.log).catch(console.error);
   return (
     <Paper
       elevation={3}
@@ -33,29 +30,26 @@ export const ProjectDetails = ({ project }: { project: Project }) => {
             ))}
           </>
         )} */}
-        <Typography
-          variant="caption"
-          sx={{ width: '100%' }}
-        >
+        <Typography variant="caption" sx={{ width: "100%" }}>
           <MUILink
             component={Link}
             href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja"
-            sx={{ color: 'info.main' }}
+            sx={{ color: "info.main" }}
           >
             &nbsp;CC BY-SA 4.0&nbsp;
           </MUILink>
           のライセンスに基づいて公開
-          <img 
+          <img
             className="inline-block h-4 mx-1"
             src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
             alt=""
           />
-          <img 
+          <img
             className="inline-block h-4 mx-1"
             src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
             alt=""
           />
-          <img 
+          <img
             className="inline-block h-4 mx-1"
             src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
             alt=""
