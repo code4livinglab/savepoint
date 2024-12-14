@@ -80,6 +80,7 @@ const SignUpForm = () => {
                 <MUILink
                   component={Link}
                   href="https://ludicrous-flyingfish-cc4.notion.site/terms-of-use"
+                  target="_blank"
                   sx={{ color: 'info.main' }}
                 >
                   利用規約
@@ -88,6 +89,7 @@ const SignUpForm = () => {
                 <MUILink
                   component={Link}
                   href="http://ludicrous-flyingfish-cc4.notion.site/privacy-policy"
+                  target="_blank"
                   sx={{ color: 'info.main' }}
                 >
                   プライバシーポリシー
