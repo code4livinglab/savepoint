@@ -19,8 +19,7 @@ export const ProjectDetails = ({ project }: { project: Project }) => {
       try {
         const files = await getFileListWithSizes(project.id);
         const safeFiles = files.filter(
-          (file): file is { fileName: string; fileSize: number } =>
-            file.fileName !== undefined && file.fileSize !== undefined
+          (file) => file.fileName !== undefined && file.fileSize !== undefined
         );
         setFileList(safeFiles);
       } catch (error) {
