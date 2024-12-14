@@ -40,22 +40,23 @@ export const ProjectDetails = ({ project }: { project: Project }) => {
           <MUILink
             component={Link}
             href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja"
+            target="_blank"
             sx={{ color: 'info.main' }}
           >
             &nbsp;CC BY-SA 4.0&nbsp;
           </MUILink>
           のライセンスに基づいて公開
-          <img 
+          <img
             className="inline-block h-4 mx-1"
             src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1"
             alt=""
           />
-          <img 
+          <img
             className="inline-block h-4 mx-1"
             src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1"
             alt=""
           />
-          <img 
+          <img
             className="inline-block h-4 mx-1"
             src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1"
             alt=""
