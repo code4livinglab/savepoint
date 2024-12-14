@@ -1,5 +1,6 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import { Link as MUILink, Paper, Stack, Typography } from "@mui/material";
-// import { File } from '@/app/_types/file'
 import { Project } from "@/app/_types/project";
 import { DownloadButton } from "./DownloadButton";
 import { MarkdownViewer } from "./MarkdownViewer";
@@ -8,7 +9,30 @@ import { getFileListWithSizes } from "../action";
 import Link from "next/link";
 
 export const ProjectDetails = ({ project }: { project: Project }) => {
-  getFileListWithSizes(project.id).then(console.log).catch(console.error);
+  const [fileList, setFileList] = useState<
+    { fileName: string; fileSize: string }[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFileList = async () => {
+      try {
+        const files = await getFileListWithSizes(project.id);
+        const safeFiles = files.filter(
+          (file): file is { fileName: string; fileSize: number } =>
+            file.fileName !== undefined && file.fileSize !== undefined
+        );
+        setFileList(safeFiles);
+      } catch (error) {
+        console.error("Error fetching file list:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFileList();
+  }, [project.id]);
+
   return (
     <Paper
       elevation={3}
@@ -17,19 +41,7 @@ export const ProjectDetails = ({ project }: { project: Project }) => {
     >
       <Stack spacing={2}>
         <MarkdownViewer project={project} />
-        {/* {project.file_names && project.file_names?.length > 0 && (
-          <>
-            <h2 className="text-xl text-gray-200 font-semibold my-3">Data</h2>
-            {project.file_names.map((filename, i) => (
-              <button key={i}
-                className="text-left text-gray-300 my-1 hover:text-blue-300 hover:underline"
-                onClick={()=> viewProjectFile(project.id, filename)}
-              >
-                ・{filename}
-              </button>
-            ))}
-          </>
-        )} */}
+
         <Typography variant="caption" sx={{ width: "100%" }}>
           <MUILink
             component={Link}
@@ -55,29 +67,25 @@ export const ProjectDetails = ({ project }: { project: Project }) => {
             alt=""
           />
         </Typography>
+        {loading ? (
+          <Typography variant="body2">Loading files...</Typography>
+        ) : fileList.length > 0 ? (
+          <>
+            <Typography variant="h6">File List</Typography>
+            <Stack spacing={1}>
+              {fileList.map((file, index) => (
+                <Typography key={index} variant="body2">
+                  ・{file.fileName} - {file.fileSize}
+                </Typography>
+              ))}
+            </Stack>
+          </>
+        ) : (
+          <Typography variant="body2">No files available.</Typography>
+        )}
         <DownloadButton projectId={project.id} />
         <CloseButton />
       </Stack>
     </Paper>
   );
-};
-
-const viewProjectFile = async (projectId: string, fileName: string) => {
-  try {
-    const response = await fetch(`/api/${projectId}/files/${fileName}`);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    const href = data.url;
-
-    const a = document.createElement("a");
-    a.href = href;
-    a.target = "_blank";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  } catch (err) {
-    console.error("viewfile error:", err);
-  }
 };

@@ -112,7 +112,7 @@ export const downloadAction = async (projectId: string) => {
  * @param {string} projectId - The ID of the project to fetch files for.
  * @returns {Promise<{ fileName: string, fileSize: number }[]>} - A list of file names and their sizes.
  */
-export const getFileListWithSizes = async (projectId: string) => {
+export const getFileListWithSizes = async (projectId: number) => {
   try {
     const projectUri = projectsKey + projectId;
     const listParams = {
@@ -128,8 +128,13 @@ export const getFileListWithSizes = async (projectId: string) => {
 
     const fileDetails = filesData.Contents.map((file) => ({
       fileName: file.Key?.replace(`${projectUri}/`, ""),
-      fileSize: file.Size,
-    }));
+      fileSize: file.Size
+        ? (file.Size / (1024 * 1024)).toFixed(2) + " MB"
+        : "0 MB",
+    })).filter(
+      (file) =>
+        file.fileName && file.fileName.trim() !== "" && file.fileSize !== "0 MB"
+    );
 
     return fileDetails;
   } catch (error) {
